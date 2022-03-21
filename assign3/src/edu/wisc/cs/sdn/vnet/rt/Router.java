@@ -217,7 +217,7 @@ public class Router extends Device
 		// Find matching route table entry 
 		RouteEntry bestMatch = this.routeTable.lookup(dstAddr);
 		if (null == bestMatch)
-		{ return; }
+		{ return null; }
 
 		// Make sure we don't sent a packet back out the interface it came in
 		Iface outIface = bestMatch.getInterface();
@@ -234,7 +234,7 @@ public class Router extends Device
 
 		//Set IP Header Values
 		IPv4 ip = new IPv4();
-		ip.setTtl(64);
+		ip.setTtl((byte)64);
 		ip.setProtocol(IPv4.PROTOCOL_ICMP);
 		ip.setSourceAddress(inIface.getIpAddress());
 		ip.setDestinationAddress(ipPacket.getSourceAddress());
@@ -270,7 +270,7 @@ public class Router extends Device
 		// Find matching route table entry 
 		RouteEntry bestMatch = this.routeTable.lookup(dstAddr);
 		if (null == bestMatch)
-		{ return; }
+		{ return null; }
 
 		// Make sure we don't sent a packet back out the interface it came in
 		Iface outIface = bestMatch.getInterface();
@@ -287,7 +287,7 @@ public class Router extends Device
 
 		//Set IP Header Values
 		IPv4 ip = new IPv4();
-		ip.setTtl(64);
+		ip.setTtl((byte)64);
 		ip.setProtocol(IPv4.PROTOCOL_ICMP);
 		ip.setSourceAddress(dstAddr);
 		ip.setDestinationAddress(ipPacket.getSourceAddress());
