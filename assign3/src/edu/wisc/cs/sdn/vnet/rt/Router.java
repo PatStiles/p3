@@ -137,7 +137,7 @@ public class Router extends Device
 		{
 			if (ipPacket.getDestinationAddress() == iface.getIpAddress())
 			{ 
-				if(ipPacket.getProtocol() == IPv4.PROTOCOL_UDP || ipPacket.getHeader == IPv4.PROTOCOL_TCP)
+				if(ipPacket.getProtocol() == IPv4.PROTOCOL_UDP || ipPacket.getProtocol() == IPv4.PROTOCOL_TCP)
 				{
 
 					Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 3,etherPacket, inIface);
