@@ -121,7 +121,7 @@ public class Router extends Device
 		if (0 == ipPacket.getTtl())
 		{ 
 			Ethernet icmpMsg = genICMPMsg((byte) 11, (byte) 0,etherPacket, inIface);
-			this.sendPacket(icmpMsg);
+			this.sendPacket(icmpMsg, inIface);
 			return; 
 		}
 
@@ -137,14 +137,14 @@ public class Router extends Device
 				{
 
 					Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 3,etherPacket, inIface);
-					this.sendPacket(icmpMsg);
+					this.sendPacket(icmpMsg, iface);
 					return; 
 				}
 
 				if(ipPacket.getProtocol() == IPv4.PROTOCOL_ICMP)
 				{
 					Ethernet icmpMsg = genEchoMsg((byte) 0, (byte) 0,etherPacket, inIface);
-					this.sendPacket(icmpMsg);
+					this.sendPacket(icmpMsg, iface);
 					return; 
 					
 				}
@@ -174,7 +174,7 @@ public class Router extends Device
 		if (null == bestMatch)
 		{ 
 			Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 0, etherPacket, inIface);
-			this.sendPacket(icmpMsg);
+			this.sendPacket(icmpMsg, inIface);
 			return; 
 		}
 
@@ -196,7 +196,7 @@ public class Router extends Device
 		if (null == arpEntry)
 		{ 	
 			Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 1, etherPacket, inIface);
-			this.sendPacket(icmpMsg);
+			this.sendPacket(icmpMsg, outIface);
 			return; 
 		}
 
@@ -302,7 +302,7 @@ public class Router extends Device
 		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
 		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize());
 		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
-		bbuf.get(payload, (int)ipPacket.getHeaderLength(), payload.capacity())
+		bbuf.get(payload, (int)ipPacket.getHeaderLength(), payload.capacity());
 		Data data = new Data(payload.array());
 
 		//Set Payloads
