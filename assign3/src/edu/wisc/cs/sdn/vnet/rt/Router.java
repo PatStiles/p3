@@ -10,6 +10,9 @@ import net.floodlightcontroller.packet.Data;
 import net.floodlightcontroller.packet.Ethernet;
 import net.floodlightcontroller.packet.ICMP;
 import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.UDP;
+import net.floodlightcontroller.packet.RIPv2;
+import net.floodlightcontroller.packet.RIPv2Entry;
 
 /**
  * @author Aaron Gember-Jacobson and Anubhavnidhi Abhashkumar
@@ -89,6 +92,13 @@ public class Router extends Device
 
 		/********************************************************************/
 		/* TODO: Handle packets                                             */
+
+		// Handle RIP packets
+		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
+		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ipPacket.getSourceAddress() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == UDP.RIP_PORT) 
+		{
+			handleRipPacket(etherPacket, inIface);
+		}
 
 		switch(etherPacket.getEtherType())
 		{
@@ -314,5 +324,19 @@ public class Router extends Device
 		ip.setPayload(icmp);
 		ether.setPayload(ip);
 		return ether;
+	}
+
+	private void handleRipPacket(Ethernet etherPacket, Iface inIface) 
+	{
+		// TODO: Update route table
+
+		// TODO: Send RIP response packets
+		// For sending requests and unsolicited responses:
+		//   Destination IP 		224.0.0.9
+		//   Destination Ethernet	FF:FF:FF:FF:FF:FF
+		// For sending response for specific request:
+		//   Destination IP			inIface.getIpAddress()
+		//   Destination Ethernet	inIface.getMacAddress()
+		return;
 	}
 }
