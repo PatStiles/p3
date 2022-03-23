@@ -52,11 +52,6 @@ public class Router extends Device
 		super(host,logfile);
 		this.routeTable = new RouteTable();
 		this.arpCache = new ArpCache();
-		//Add intial entries to routetable
-		for(Iface iface : this.interfaces.values())
-		{
-			//add direct subnet connections to interface aka make interfaces into route table entries	
-		}	
 		
 		//start timeout thread`
 		(new timeOutChecker()).start();
@@ -368,8 +363,24 @@ public class Router extends Device
 		return;
 	}
 
-	public void rip() {
+	public void rip() 
+	{
+		// Build initial table on startup
+		this.buildRipRouteTable();
 
 		//start thread that automatically sends out rip msgs every 10 secs.
+	}
+
+	private void buildRipRouteTable()
+	{
+		// Add RouteTable entries for directly reachable subnets
+		for (Iface iface : this.interfaces.values())
+		{
+			int destinationAddress = iface.getIpAddress();
+			int maskAddress = iface.getIpAddress() & iface.getSubnetMask();
+
+			// TODO: 0 to specify no gateway address?
+			this.routeTable.insert(destinationAddress, 0, maskAddress, iface);
+		}
 	}
 }
