@@ -119,12 +119,12 @@ public class Router extends Device
 		/********************************************************************/
 		/* TODO: Handle packets                                             */
 
-		// Handle RIP packets
-		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
-		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ipPacket.getSourceAddress() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == UDP.RIP_PORT) 
-		{
-			handleRipPacket(etherPacket, inIface);
-		}
+		// TODO: Handle RIP packets, error casting payload to IPv4 (move this somewhere else)
+		//IPv4 ipPacket = (IPv4)etherPacket.getPayload();
+		//if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ipPacket.getSourceAddress() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == UDP.RIP_PORT) 
+		//{
+		//	handleRipPacket(etherPacket, inIface);
+		//}
 
 		switch(etherPacket.getEtherType())
 		{
