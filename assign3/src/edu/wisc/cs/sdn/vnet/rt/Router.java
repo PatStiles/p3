@@ -25,6 +25,24 @@ public class Router extends Device
 	/** ARP cache for the router */
 	private ArpCache arpCache;
 
+	private class timeOutChecker extends Thread {
+		public void run() {
+			Iterator<tableEntry> iter = routingTable.values().iterator();
+			while(true) {
+				if(timeOutChecker.interrupted())
+				{ break; }
+
+				while (iter.hasNExt()) {
+					tableEntry t = iter.nect();
+					if(t == null)
+					{ continue; }
+					if ((System.currentTimeMillis() - t.time) >= 30000) {
+						iter.remove();
+					}
+				}
+			}
+		}
+	}
 	/**
 	 * Creates a router for a specific host.
 	 * @param host hostname for the router
@@ -34,6 +52,14 @@ public class Router extends Device
 		super(host,logfile);
 		this.routeTable = new RouteTable();
 		this.arpCache = new ArpCache();
+		//Add intial entries to routetable
+		for(Iface iface : this.interfaces.values())
+		{
+			//add direct subnet connections to interface aka make interfaces into route table entries	
+		}	
+		
+		//start timeout thread`
+		(new timeOutChecker()).start();
 	}
 
 	/**
@@ -337,6 +363,13 @@ public class Router extends Device
 		// For sending response for specific request:
 		//   Destination IP			inIface.getIpAddress()
 		//   Destination Ethernet	inIface.getMacAddress()
+		//
+		//   To handle RIP routing use the algorithm in the slides of weeek 7 slide 12
 		return;
+	}
+
+	public void rip() {
+
+		//start thread that automatically sends out rip msgs every 10 secs.
 	}
 }

@@ -43,7 +43,7 @@ public class Main
 			else if (arg.equals("-a"))
 			{ arpCacheFile = args[++i]; }
 		}
-		
+
 		if (null == host)
 		{
 			usage();
@@ -88,6 +88,7 @@ public class Main
 			// Read static route table
 			if (routeTableFile != null)
 			{ ((Router)dev).loadRouteTable(routeTableFile); }
+			else { routeTable.rip()};
 			
 			// Read static ACP cache
 			if (arpCacheFile != null)
