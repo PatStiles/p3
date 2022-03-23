@@ -10,6 +10,7 @@ import net.floodlightcontroller.packet.Data;
 import net.floodlightcontroller.packet.Ethernet;
 import net.floodlightcontroller.packet.ICMP;
 import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.MACAddress;
 import net.floodlightcontroller.packet.UDP;
 import net.floodlightcontroller.packet.RIPv2;
 import net.floodlightcontroller.packet.RIPv2Entry;
@@ -24,6 +25,10 @@ public class Router extends Device
 
 	/** ARP cache for the router */
 	private ArpCache arpCache;
+
+	/** Destination addresses for RIP requests and unsolicited responses */
+	private static final int RIP_IP_ADDRESS = IPv4.toIPv4Address("224.0.0.9");
+	private static final MACAddress RIP_MAC_ADDRESS = MACAddress.valueOf("FF:FF:FF:FF:FF:FF");
 
 	private class timeOutChecker extends Thread {
 		public void run() {
@@ -352,7 +357,7 @@ public class Router extends Device
 		// TODO: Update route table
 
 		// TODO: Send RIP response packets
-		// For sending requests and unsolicited responses:
+		// For sending requests and unsolicited responses (defined as static constants):
 		//   Destination IP 		224.0.0.9
 		//   Destination Ethernet	FF:FF:FF:FF:FF:FF
 		// For sending response for specific request:
@@ -368,6 +373,9 @@ public class Router extends Device
 		// Build initial table on startup
 		this.buildRipRouteTable();
 
+		// Send RIP request on all interfaces after initializing
+		this.sendRipRequests();
+
 		//start thread that automatically sends out rip msgs every 10 secs.
 	}
 
@@ -381,6 +389,20 @@ public class Router extends Device
 
 			// TODO: 0 to specify no gateway address?
 			this.routeTable.insert(destinationAddress, 0, maskAddress, iface);
+		}
+	}
+
+	private void sendRipRequests()
+	{
+		for (Iface iface : this.interfaces.values())
+		{
+			// TODO: construct packet and add RIP entries
+			UDP packet = new UDP();
+
+			RIPv2 rip = new RIPv2();
+			rip.setCommand(RIPv2.COMMAND_REQUEST);	
+			
+			packet.setPayload(rip);
 		}
 	}
 }
