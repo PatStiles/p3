@@ -387,8 +387,7 @@ public class Router extends Device
 			int destinationAddress = iface.getIpAddress();
 			int maskAddress = iface.getIpAddress() & iface.getSubnetMask();
 
-			// TODO: 0 to specify no gateway address?
-			this.routeTable.insert(destinationAddress, 0, maskAddress, iface);
+			this.routeTable.insert(destinationAddress, IPv4.toIPv4Address("0.0.0.0"), maskAddress, iface);
 		}
 	}
 
