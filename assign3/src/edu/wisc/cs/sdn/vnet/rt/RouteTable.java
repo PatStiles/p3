@@ -28,6 +28,9 @@ public class RouteTable
 	public RouteTable()
 	{ this.entries = new LinkedList<RouteEntry>(); }
 
+	public int getLength()
+	{ return entries.size(); }
+
 	/**
 	 * Lookup the route entry that matches a given IP address.
 	 * @param ip IP address
