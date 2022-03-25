@@ -1,6 +1,7 @@
 package edu.wisc.cs.sdn.vnet.rt;
 
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
 import edu.wisc.cs.sdn.vnet.Device;
 import edu.wisc.cs.sdn.vnet.DumpFile;
@@ -33,16 +34,16 @@ public class Router extends Device
 
 	private class timeOutChecker extends Thread {
 		public void run() {
-			Iterator<tableEntry> iter = routingTable.values().iterator();
+			Iterator<RouteEntry> iter = routeTable.getEntries().iterator();
 			while(true) {
 				if(timeOutChecker.interrupted())
 				{ break; }
 
-				while (iter.hasNExt()) {
-					tableEntry t = iter.nect();
+				while (iter.hasNext()) {
+					RouteEntry t = iter.next();
 					if(t == null)
 					{ continue; }
-					if ((System.currentTimeMillis() - t.time) >= 30000) {
+					if ((System.currentTimeMillis() - t.getTimeUpdated()) >= 30000) {
 						iter.remove();
 					}
 				}

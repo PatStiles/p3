@@ -20,7 +20,7 @@ import edu.wisc.cs.sdn.vnet.Iface;
 public class RouteTable 
 {
 	/** Entries in the route table */
-	private List<RouteEntry> entries; 
+	private List<RouteEntry> entries;
 
 	/**
 	 * Initialize an empty route table.
@@ -30,6 +30,9 @@ public class RouteTable
 
 	public int getLength()
 	{ return entries.size(); }
+
+	public List<RouteEntry> getEntries()
+	{ return this.entries; }
 
 	/**
 	 * Lookup the route entry that matches a given IP address.

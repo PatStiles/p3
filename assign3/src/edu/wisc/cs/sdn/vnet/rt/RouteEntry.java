@@ -24,6 +24,7 @@ public class RouteEntry
 
 	private int metric;
 	private byte ttl;
+	private int timeUpdated;
 	
 	/**
 	 * Create a new route table entry.
@@ -84,6 +85,12 @@ public class RouteEntry
 
     public void setTtl(byte ttl) 
 	{ this.ttl = ttl; }
+
+	public int getTimeUpdated()
+	{ return this.timeUpdated; }
+
+	public void setTimeSinceUpdate(int time)
+	{ this.timeUpdated = time; }
 	
 	public String toString()
 	{
