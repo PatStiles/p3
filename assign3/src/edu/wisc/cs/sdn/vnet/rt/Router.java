@@ -29,6 +29,7 @@ public class Router extends Device
 	/** Destination addresses for RIP requests and unsolicited responses */
 	private static final int RIP_IP_ADDRESS = IPv4.toIPv4Address("224.0.0.9");
 	private static final MACAddress RIP_MAC_ADDRESS = MACAddress.valueOf("FF:FF:FF:FF:FF:FF");
+	private static final int EMPTY_GATEWAY_ADDRESS = IPv4.toIPv4Address("0.0.0.0");
 
 	private class timeOutChecker extends Thread {
 		public void run() {
@@ -340,7 +341,7 @@ public class Router extends Device
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
 		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
-		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize());
+		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
 		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
 		bbuf.get(payload, (int)ipPacket.getHeaderLength(), payload.capacity());
 		Data data = new Data(payload.array());
@@ -355,6 +356,36 @@ public class Router extends Device
 	private void handleRipPacket(Ethernet etherPacket, Iface inIface) 
 	{
 		// TODO: Update route table
+		RIPv2 rip = (RIPv2)etherPacket.getPayload();
+
+		int i = 0;
+
+		for (RIPv2Entry entry : rip.getEntries())
+		{
+			int dstAddr = entry.getAddress();
+			RouteEntry match = routeTable.lookup(dstAddr);
+
+			if (match != null)
+			{
+				int curCost = match.getMetric();
+				int newCost = entry.getMetric();
+
+				if (newCost + 1 < curCost)
+				{
+					break;
+				}
+				else if (entry.getNextHopAddress() == match.getDestinationAddress())
+				{
+					break;
+				}
+				else 
+				{
+					return;
+				}
+			}
+
+			i++;
+		}
 
 		// TODO: Send RIP response packets
 		// For sending requests and unsolicited responses (defined as static constants):
@@ -387,7 +418,7 @@ public class Router extends Device
 			int destinationAddress = iface.getIpAddress();
 			int maskAddress = iface.getIpAddress() & iface.getSubnetMask();
 
-			this.routeTable.insert(destinationAddress, IPv4.toIPv4Address("0.0.0.0"), maskAddress, iface);
+			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface);
 		}
 	}
 
