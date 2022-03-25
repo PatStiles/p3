@@ -23,6 +23,7 @@ public class RouteEntry
 	private Iface iface;
 
 	private int metric;
+	private byte ttl;
 	
 	/**
 	 * Create a new route table entry.
@@ -77,6 +78,12 @@ public class RouteEntry
 
 	public void setMetric(int metric)
 	{ this.metric = metric; }
+
+    public byte getTtl() 
+	{ return this.ttl; }
+
+    public void setTtl(byte ttl) 
+	{ this.ttl = ttl; }
 	
 	public String toString()
 	{
