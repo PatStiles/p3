@@ -343,7 +343,7 @@ public class Router extends Device
 		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
 		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
 		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
-		bbuf.get(payload, (int)ipPacket.getHeaderLength(), payload.capacity());
+		bbuf.get(payload.array(), (int)ipPacket.getHeaderLength(), payload.capacity());
 		Data data = new Data(payload.array());
 
 		//Set Payloads
