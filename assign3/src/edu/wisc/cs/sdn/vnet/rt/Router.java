@@ -216,7 +216,10 @@ public class Router extends Device
 		if (null == bestMatch)
 		{ 
 			Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 0, etherPacket, inIface);
-			this.sendPacket(icmpMsg, inIface);
+
+			if (icmpMsg != null)
+			{ this.sendPacket(icmpMsg, inIface); }
+
 			return; 
 		}
 
@@ -254,14 +257,13 @@ public class Router extends Device
 
 		//get ipv4 packet info
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
-		int dstAddr = ipPacket.getDestinationAddress();
+		int dstAddr = ipPacket.getSourceAddress();
 
 		// Find matching route table entry 
 		RouteEntry bestMatch = this.routeTable.lookup(dstAddr);
 		if (null == bestMatch)
 		{ return null; }
 
-		// Make sure we don't sent a packet back out the interface it came in
 		Iface outIface = bestMatch.getInterface();
 		ether.setSourceMACAddress(outIface.getMacAddress().toBytes());
 
@@ -272,6 +274,8 @@ public class Router extends Device
 
 		// Set destination MAC address in Ethernet header
 		ArpEntry arpEntry = this.arpCache.lookup(nextHop);
+		if (arpEntry == null)
+		{ return null; }
 		ether.setDestinationMACAddress(arpEntry.getMac().toBytes());
 
 		//Set IP Header Values
@@ -288,9 +292,10 @@ public class Router extends Device
 
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
-		ByteBuffer bbuf = ByteBuffer.allocate(4 + (int)ipPacket.getHeaderLength() + 8);
+		ByteBuffer bbuf = ByteBuffer.allocate(4 + ((int)ipPacket.getHeaderLength() * 4) + 8);
 		byte[] header = ipPacket.serialize();
-		bbuf.put(header, 4, ((int)ipPacket.getHeaderLength() + 8));
+		bbuf.putInt(0);
+		bbuf.put(header, 0, (((int)ipPacket.getHeaderLength() * 4) + 8));
 		Data data = new Data(bbuf.array());
 
 		//Set Payloads
@@ -339,16 +344,8 @@ public class Router extends Device
 		icmp.setIcmpType(icmpType);
 		icmp.setIcmpCode(icmpCode);
 
-		//Set Data for ICMP Header
-		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
-		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
-		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
-		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
-		bbuf.get(payload.array(), (int)ipPacket.getHeaderLength(), payload.capacity());
-		Data data = new Data(payload.array());
-
 		//Set Payloads
-		icmp.setPayload(data);	
+		icmp.setPayload(((ICMP)ipPacket.getPayload()).getPayload());	
 		ip.setPayload(icmp);
 		ether.setPayload(ip);
 		return ether;
