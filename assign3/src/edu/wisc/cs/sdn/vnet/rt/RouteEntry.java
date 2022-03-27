@@ -21,6 +21,10 @@ public class RouteEntry
 	/** Router interface out which packets should be sent to reach
 	 * the destination or gateway */
 	private Iface iface;
+
+	private int metric;
+	private byte ttl;
+	private int timeUpdated;
 	
 	/** Time (in Milliseconds since the epoch) the entry was updated */
 	private long timeUpdated;
@@ -73,6 +77,24 @@ public class RouteEntry
 
 	public void setInterface(Iface iface)
 	{ this.iface = iface; }
+
+	public int getMetric()
+	{ return this.metric; }
+
+	public void setMetric(int metric)
+	{ this.metric = metric; }
+
+    public byte getTtl() 
+	{ return this.ttl; }
+
+    public void setTtl(byte ttl) 
+	{ this.ttl = ttl; }
+
+	public int getTimeUpdated()
+	{ return this.timeUpdated; }
+
+	public void setTimeSinceUpdate(int time)
+	{ this.timeUpdated = time; }
 	
 	public String toString()
 	{

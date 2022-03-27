@@ -25,7 +25,7 @@ public class RouteTable implements Runnable
 	public static final int TIMEOUT = 30 * 1000;
 
 	/** Entries in the route table */
-	private List<RouteEntry> entries; 
+	private List<RouteEntry> entries;
 
 	/** Thread for timing out requests and entries in cache */
 	private Thread timeoutThread;
@@ -63,6 +63,12 @@ public class RouteTable implements Runnable
 			}
 		}
 	}
+
+	public int getLength()
+	{ return entries.size(); }
+
+	public List<RouteEntry> getEntries()
+	{ return this.entries; }
 
 	/**
 	 * Lookup the route entry that matches a given IP address.
