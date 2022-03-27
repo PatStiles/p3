@@ -356,8 +356,6 @@ public class Router extends Device
 		// TODO: Update route table
 		RIPv2 rip = (RIPv2)etherPacket.getPayload();
 
-		int i = 0;
-
 		for (RIPv2Entry entry : rip.getEntries())
 		{
 			int dstAddr = entry.getAddress();
@@ -381,8 +379,6 @@ public class Router extends Device
 					return;
 				}
 			}
-
-			i++;
 		}
 
 		// TODO: Send RIP response packets
@@ -394,6 +390,7 @@ public class Router extends Device
 		//   Destination Ethernet	inIface.getMacAddress()
 		//
 		//   To handle RIP routing use the algorithm in the slides of weeek 7 slide 12
+
 		return;
 	}
 
@@ -403,7 +400,7 @@ public class Router extends Device
 		this.buildRipRouteTable();
 
 		// Send RIP request on all interfaces after initializing
-		this.sendRipRequests();
+		this.broadcastRip();
 
 		//start thread that automatically sends out rip msgs every 10 secs.
 	}
@@ -413,24 +410,46 @@ public class Router extends Device
 		// Add RouteTable entries for directly reachable subnets
 		for (Iface iface : this.interfaces.values())
 		{
-			int destinationAddress = iface.getIpAddress();
-			int maskAddress = iface.getIpAddress() & iface.getSubnetMask();
+			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
+			int maskAddress = iface.getSubnetMask();
 
 			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface);
 		}
+
+		System.out.println("Loaded route table from directly reachable subnets");
+		System.out.println("-------------------------------------------------");
+		System.out.print(this.routeTable.toString());
+		System.out.println("-------------------------------------------------");
 	}
 
-	private void sendRipRequests()
+	private void broadcastRip()
 	{
 		for (Iface iface : this.interfaces.values())
 		{
 			// TODO: construct packet and add RIP entries
-			UDP packet = new UDP();
+			Ethernet etherPacket = new Ethernet();
+			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
+
+			UDP udpPacket = new UDP();
+			udpPacket.setDestinationPort(UDP.RIP_PORT);
 
 			RIPv2 rip = new RIPv2();
-			rip.setCommand(RIPv2.COMMAND_REQUEST);	
+			rip.setCommand(RIPv2.COMMAND_REQUEST);
+
+			for (RouteEntry tableEntry : routeTable.getEntries())
+			{
+				RIPv2Entry ripEntry = new RIPv2Entry();
+
+				ripEntry.setAddress(tableEntry.getDestinationAddress());
+				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
+				ripEntry.setMetric(tableEntry.getMetric());
+
+				rip.addEntry(ripEntry);
+			}
 			
-			packet.setPayload(rip);
+			udpPacket.setPayload(rip);
+			etherPacket.setPayload(udpPacket);
+			this.sendPacket(etherPacket, iface);
 		}
 	}
 }
