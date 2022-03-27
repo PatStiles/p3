@@ -22,6 +22,9 @@ public class RouteEntry
 	 * the destination or gateway */
 	private Iface iface;
 	
+	/** Time (in Milliseconds since the epoch) the entry was updated */
+	private long timeUpdated;
+	
 	/**
 	 * Create a new route table entry.
 	 * @param destinationAddress destination IP address
@@ -37,6 +40,7 @@ public class RouteEntry
 		this.gatewayAddress = gatewayAddress;
 		this.maskAddress = maskAddress;
 		this.iface = iface;
+		this.timeUpdated = System.currentTimeMillis();
 	}
 	
 	/**
@@ -78,4 +82,10 @@ public class RouteEntry
 				IPv4.fromIPv4Address(this.maskAddress),
 				this.iface.getName());
 	}
+
+	public long getTimeUpdated()
+	{ return this.timeUpdated; }
+
+	public void setTimeUpdated()
+	{ this.timeUpdated = System.currentTimeMillis(); }
 }

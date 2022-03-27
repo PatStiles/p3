@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Collections;
+import java.lang.InterruptedException;
 
 import net.floodlightcontroller.packet.IPv4;
 
@@ -17,16 +19,50 @@ import edu.wisc.cs.sdn.vnet.Iface;
  * Route table for a router.
  * @author Aaron Gember-Jacobson
  */
-public class RouteTable 
+public class RouteTable implements Runnable
 {
+	/** Timeout (in milliseconds) for entries in the route table */
+	public static final int TIMEOUT = 30 * 1000;
+
 	/** Entries in the route table */
 	private List<RouteEntry> entries; 
+
+	/** Thread for timing out requests and entries in cache */
+	private Thread timeoutThread;
+
+	/** Timeout (in Milliseconds) to send out unsolicited RIP responses out on all route interface */
+	private long timeToBroadcast;
+
+	public long getTimeToBroadcast()
+	{ return this.timeToBroadcast; }
 
 	/**
 	 * Initialize an empty route table.
 	 */
 	public RouteTable()
-	{ this.entries = new LinkedList<RouteEntry>(); }
+	{ 
+		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
+		this.timeToBroadcast = System.currentTimeMillis();
+		this.timeoutThread = new Thread(this);
+		this.timeoutThread.start();
+	}
+
+	public void run()
+	{
+		while(true)
+		{
+			try
+			{ Thread.sleep(1000);}
+			catch (InterruptedException e)
+			{ break; }
+
+			for (RouteEntry entry : this.entries)
+			{
+				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > TIMEOUT)
+				{ this.remove(entry.getDestinationAddress(), entry.getMaskAddress()); }
+			}
+		}
+	}
 
 	/**
 	 * Lookup the route entry that matches a given IP address.
@@ -158,10 +194,16 @@ public class RouteTable
 	 */
 	public void insert(int dstIp, int gwIp, int maskIp, Iface iface)
 	{
-		RouteEntry entry = new RouteEntry(dstIp, gwIp, maskIp, iface);
 		synchronized(this.entries)
 		{ 
-			this.entries.add(entry);
+			RouteEntry entry = this.find(dstIp, maskIp);
+			if(entry != null)
+			{ this.update(dstIp, maskIp, gwIp, iface); }
+			else
+			{
+				RouteEntry newEntry = new RouteEntry(dstIp, gwIp, maskIp, iface);
+				this.entries.add(newEntry);
+			}
 		}
 	}
 
@@ -196,6 +238,7 @@ public class RouteTable
 		{
 			RouteEntry entry = this.find(dstIp, maskIp);
 			if (null == entry) { return false; }
+			entry.setTimeUpdated();
 			entry.setGatewayAddress(gwIp);
 			entry.setInterface(iface);
 		}

@@ -1,6 +1,8 @@
 package edu.wisc.cs.sdn.vnet.rt;
 
 import java.nio.ByteBuffer;
+import java.lang.Thread;
+import java.lang.InterruptedException;
 
 import edu.wisc.cs.sdn.vnet.Device;
 import edu.wisc.cs.sdn.vnet.DumpFile;
@@ -30,24 +32,26 @@ public class Router extends Device
 	private static final int RIP_IP_ADDRESS = IPv4.toIPv4Address("224.0.0.9");
 	private static final MACAddress RIP_MAC_ADDRESS = MACAddress.valueOf("FF:FF:FF:FF:FF:FF");
 
-	private class timeOutChecker extends Thread {
-		public void run() {
-			Iterator<tableEntry> iter = routingTable.values().iterator();
-			while(true) {
-				if(timeOutChecker.interrupted())
-				{ break; }
+	/** Timeout (in Milliseconds) to send out unsolicited RIP responses out on all route interfaces */
+	public static final int TIME_RIP_BROADCAST = 10 * 1000;
 
-				while (iter.hasNExt()) {
-					tableEntry t = iter.nect();
-					if(t == null)
-					{ continue; }
-					if ((System.currentTimeMillis() - t.time) >= 30000) {
-						iter.remove();
-					}
-				}
-			}
+	/** Thread for timing the broadcast of threads */
+	private Thread broadcastRIPThread;
+
+	public void run()
+	{
+		while(true)
+		{
+			try
+			{ Thread.sleep(1000);}
+			catch (InterruptedException e)
+			{ break; }
+
+			if (routeTable.getTimeToBroadcast() % TIME_RIP_BROADCAST  == 0)
+			{ this.broadcastRIP(); }
 		}
 	}
+
 	/**
 	 * Creates a router for a specific host.
 	 * @param host hostname for the router
@@ -56,10 +60,10 @@ public class Router extends Device
 	{
 		super(host,logfile);
 		this.routeTable = new RouteTable();
-		this.arpCache = new ArpCache();
-		
-		//start timeout thread`
-		(new timeOutChecker()).start();
+		this.arpCache = new ArpCache();	
+		this.broadcastRIP();
+		this.broadcastRIPThread = new Thread();
+		this.broadcastRIPThread.start();
 	}
 
 	/**
@@ -121,7 +125,7 @@ public class Router extends Device
 
 		// Handle RIP packets
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
-		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ipPacket.getSourceAddress() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == UDP.RIP_PORT) 
+		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ((UDP)etherPacket.getPayload()).getDestinationPort() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == RIP_IP_ADDRESS && etherPacket.getDestinationMAC().equals(RIP_MAC_ADDRESS)); 
 		{
 			handleRipPacket(etherPacket, inIface);
 		}
@@ -340,9 +344,9 @@ public class Router extends Device
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
 		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
-		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize());
+		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
 		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
-		bbuf.get(payload, (int)ipPacket.getHeaderLength(), payload.capacity());
+		bbuf.get(payload.array(), (int)ipPacket.getHeaderLength(), payload.capacity());
 		Data data = new Data(payload.array());
 
 		//Set Payloads
@@ -374,7 +378,7 @@ public class Router extends Device
 		this.buildRipRouteTable();
 
 		// Send RIP request on all interfaces after initializing
-		this.sendRipRequests();
+		this.broadcastRIP();
 
 		//start thread that automatically sends out rip msgs every 10 secs.
 	}
