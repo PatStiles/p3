@@ -361,6 +361,7 @@ public class Router extends Device
 			int dstAddr = entry.getAddress();
 			RouteEntry match = routeTable.lookup(dstAddr);
 
+			// See 3.4.2 implementation in textbook
 			if (match != null)
 			{
 				int curCost = match.getMetric();
@@ -368,16 +369,26 @@ public class Router extends Device
 
 				if (newCost + 1 < curCost)
 				{
+					// TODO: found a better route
+					match.setMetric(newCost + 1);
+					match.setTimeSinceUpdate(0);
 					break;
 				}
 				else if (entry.getNextHopAddress() == match.getDestinationAddress())
 				{
+					// TODO: metric for current next hop may have changed
 					break;
 				}
 				else 
 				{
+					// Ignore this route
 					return;
 				}
+			}
+			else
+			{
+				// TODO: add new route to the table
+
 			}
 		}
 
@@ -426,10 +437,10 @@ public class Router extends Device
 	{
 		for (Iface iface : this.interfaces.values())
 		{
-			// TODO: construct packet and add RIP entries
 			Ethernet etherPacket = new Ethernet();
 			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
 
+			// TODO: use IP packet with UDP protocol instead ?
 			UDP udpPacket = new UDP();
 			udpPacket.setDestinationPort(UDP.RIP_PORT);
 
@@ -440,6 +451,7 @@ public class Router extends Device
 			{
 				RIPv2Entry ripEntry = new RIPv2Entry();
 
+				// TODO: set next hop address ?
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 				ripEntry.setMetric(tableEntry.getMetric());
