@@ -367,9 +367,9 @@ public class Router extends Device
 				else if (entry.getNextHopAddress() == match.getDestinationAddress())
 				{
 					// TODO: metric for current next hop may have changed
+
 					// Flood RIP resp.
 					this.floodRIPResp();
-
 					break;
 				}
 				else 
@@ -380,12 +380,11 @@ public class Router extends Device
 			}
 			else
 			{
-				// TODO: add new route to the table
-
+				// Add new route to the table
+				this.routeTable.insert(dstAddr, EMPTY_GATEWAY_ADDRESS, entry.getSubnetMask(), inIface);
 
 				//Flood RIP resp.
 				this.floodRIPResp();
-
 			}
 		}
 
@@ -437,7 +436,6 @@ public class Router extends Device
 			ip.setSourceAddress(iface.getIpAddress());
 			ip.setDestinationAddress(RIP_IP_ADDRESS);
 
-			// TODO: use IP packet with UDP protocol instead ?
 			UDP udpPacket = new UDP();
 			udpPacket.setDestinationPort(UDP.RIP_PORT);
 
@@ -476,7 +474,6 @@ public class Router extends Device
 			ip.setSourceAddress(iface.getIpAddress());
 			ip.setDestinationAddress(RIP_IP_ADDRESS);
 
-			// TODO: use IP packet with UDP protocol instead ?
 			UDP udpPacket = new UDP();
 			udpPacket.setDestinationPort(UDP.RIP_PORT);
 
