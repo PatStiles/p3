@@ -1,12 +1,6 @@
 package edu.wisc.cs.sdn.vnet.rt;
 
 import java.nio.ByteBuffer;
-<<<<<<< HEAD
-import java.lang.Thread;
-import java.lang.InterruptedException;
-=======
-import java.util.Iterator;
->>>>>>> 040bf20fdf233f139232d9549ac452f3922ab96d
 
 import edu.wisc.cs.sdn.vnet.Device;
 import edu.wisc.cs.sdn.vnet.DumpFile;
@@ -37,26 +31,6 @@ public class Router extends Device
 	private static final MACAddress RIP_MAC_ADDRESS = MACAddress.valueOf("FF:FF:FF:FF:FF:FF");
 	private static final int EMPTY_GATEWAY_ADDRESS = IPv4.toIPv4Address("0.0.0.0");
 
-	/** Timeout (in Milliseconds) to send out unsolicited RIP responses out on all route interfaces */
-	public static final int TIME_RIP_BROADCAST = 10 * 1000;
-
-	/** Thread for timing the broadcast of threads */
-	private Thread broadcastRIPThread;
-
-	public void run()
-	{
-		while(true)
-		{
-			try
-			{ Thread.sleep(1000);}
-			catch (InterruptedException e)
-			{ break; }
-
-			if (routeTable.getTimeToBroadcast() % TIME_RIP_BROADCAST  == 0)
-			{ this.broadcastRIPResp(); }
-		}
-	}
-
 	/**
 	 * Creates a router for a specific host.
 	 * @param host hostname for the router
@@ -66,9 +40,6 @@ public class Router extends Device
 		super(host,logfile);
 		this.routeTable = new RouteTable();
 		this.arpCache = new ArpCache();	
-		this.broadcastRIP();
-		this.broadcastRIPThread = new Thread();
-		this.broadcastRIPThread.start();
 	}
 
 	/**
@@ -366,7 +337,7 @@ public class Router extends Device
 		return ether;
 	}
 
-	private void handleRipPacket(Ethernet etherPacket, Iface inIface) 
+	public void handleRipPacket(Ethernet etherPacket, Iface inIface) 
 	{
 		// TODO: Update route table
 		RIPv2 rip = (RIPv2)etherPacket.getPayload();
@@ -386,10 +357,10 @@ public class Router extends Device
 				{
 					// TODO: found a better route
 					match.setMetric(newCost + 1);
-					match.setTimeSinceUpdate(0);
+					match.setTimeUpdated();
 					
 					//Flood RIP resp.
-					this.floodRIP();
+					this.floodRIPResp();
 
 					break;
 				}
@@ -431,17 +402,6 @@ public class Router extends Device
 		return;
 	}
 
-	public void rip() 
-	{
-		// Build initial table on startup
-		this.buildRipRouteTable();
-
-		// Send RIP request on all interfaces after initializing
-		this.broadcastRIP();
-
-		//start thread that automatically sends out rip msgs every 10 secs.
-	}
-
 	private void buildRipRouteTable()
 	{
 		// Add RouteTable entries for directly reachable subnets
@@ -458,6 +418,8 @@ public class Router extends Device
 		System.out.println("-------------------------------------------------");
 		System.out.print(this.routeTable.toString());
 		System.out.println("-------------------------------------------------");
+
+		this.broadcastRIP();
 	}
 
 	private void broadcastRIP()
@@ -472,7 +434,7 @@ public class Router extends Device
 			IPv4 ip = new IPv4();
 			ip.setTtl((byte)64);
 			ip.setProtocol(IPv4.PROTOCOL_UDP);
-			ip.setSourceAddress(iface.getIpAddress();
+			ip.setSourceAddress(iface.getIpAddress());
 			ip.setDestinationAddress(RIP_IP_ADDRESS);
 
 			// TODO: use IP packet with UDP protocol instead ?
@@ -501,7 +463,7 @@ public class Router extends Device
 		}
 	}
 
-	private void floodRIPResp()
+	public static void floodRIPResp()
 	{
 		for (Iface iface : this.interfaces.values())
 		{
@@ -511,7 +473,7 @@ public class Router extends Device
 			IPv4 ip = new IPv4();
 			ip.setTtl((byte)64);
 			ip.setProtocol(IPv4.PROTOCOL_UDP);
-			ip.setSourceAddress(iface.getIpAddress();
+			ip.setSourceAddress(iface.getIpAddress());
 			ip.setDestinationAddress(RIP_IP_ADDRESS);
 
 			// TODO: use IP packet with UDP protocol instead ?

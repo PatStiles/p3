@@ -22,9 +22,11 @@ public class RouteEntry
 	 * the destination or gateway */
 	private Iface iface;
 
+	/** distance metric for Routing Algorithm */
 	private int metric;
+
+	/** the ttl of the RIP packer */
 	private byte ttl;
-	private int timeUpdated;
 	
 	/** Time (in Milliseconds since the epoch) the entry was updated */
 	private long timeUpdated;

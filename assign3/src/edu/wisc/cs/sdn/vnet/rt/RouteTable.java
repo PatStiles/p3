@@ -24,17 +24,18 @@ public class RouteTable implements Runnable
 	/** Timeout (in milliseconds) for entries in the route table */
 	public static final int TIMEOUT = 30 * 1000;
 
+	/** Timouet (in Milliseconds) to send out unsolicited RIP responses out on all route interfaces */
+	public static final int TIME_RIP_BROADCAST = 10 * 1000;
+
 	/** Entries in the route table */
 	private List<RouteEntry> entries;
 
 	/** Thread for timing out requests and entries in cache */
 	private Thread timeoutThread;
 
-	/** Timeout (in Milliseconds) to send out unsolicited RIP responses out on all route interface */
+	/** Timeout (in Milliseconds) variable to send out unsolicited RIP responses out on all route interface */
 	private long timeToBroadcast;
 
-	public long getTimeToBroadcast()
-	{ return this.timeToBroadcast; }
 
 	/**
 	 * Initialize an empty route table.
@@ -56,11 +57,16 @@ public class RouteTable implements Runnable
 			catch (InterruptedException e)
 			{ break; }
 
+			//check if entry has timed out, is not a directly attached subnet (gateway != 0) and remove
 			for (RouteEntry entry : this.entries)
 			{
-				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > TIMEOUT && entry.getGatewayAddress() != 0)
+				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > this.TIMEOUT && entry.getGatewayAddress() != 0)
 				{ this.remove(entry.getDestinationAddress(), entry.getMaskAddress()); }
 			}
+
+			//check if its time to flood RIPresp
+			if((System.currentTimeMillis() - this.timeToBroadcast) % this.TIME_RIP_BROADCAST == 0)
+			{ Router.floodRIPResp(); }
 		}
 	}
 
