@@ -98,14 +98,6 @@ public class Router extends Device
 
 		/********************************************************************/
 		/* TODO: Handle packets                                             */
-
-		// Handle RIP packets
-		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
-		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ((UDP)etherPacket.getPayload()).getDestinationPort() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == RIP_IP_ADDRESS && etherPacket.getDestinationMAC().equals(RIP_MAC_ADDRESS)); 
-		{
-			handleRipPacket(etherPacket, inIface);
-		}
-
 		switch(etherPacket.getEtherType())
 		{
 		case Ethernet.TYPE_IPv4:
@@ -114,6 +106,12 @@ public class Router extends Device
 		// Ignore all other packet types, for now
 		}
 
+		// Handle RIP packets
+		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
+		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ((UDP)etherPacket.getPayload()).getDestinationPort() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == RIP_IP_ADDRESS && etherPacket.getDestinationMAC().equals(RIP_MAC_ADDRESS)); 
+		{
+			handleRipPacket(etherPacket, inIface);
+		}
 		/********************************************************************/
 	}
 
