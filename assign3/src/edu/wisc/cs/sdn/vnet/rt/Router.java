@@ -426,6 +426,7 @@ public class Router extends Device
 		for (Iface iface : this.interfaces.values())
 		{
 			Ethernet etherPacket = new Ethernet();
+			etherPacket.setSourceMACAddress(iface.getMacAddress().toString());
 			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
 			etherPacket.setEtherType(Ethernet.TYPE_IPv4);
 
@@ -466,6 +467,7 @@ public class Router extends Device
 		for (Iface iface : this.interfaces.values())
 		{
 			Ethernet etherPacket = new Ethernet();
+			etherPacket.setSourceMACAddress(iface.getMacAddress().toString());
 			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
 
 			IPv4 ip = new IPv4();
