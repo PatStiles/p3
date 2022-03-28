@@ -22,10 +22,10 @@ import edu.wisc.cs.sdn.vnet.Iface;
 public class RouteTable implements Runnable
 {
 	/** Timeout (in milliseconds) for entries in the route table */
-	public static final int TIMEOUT = 30 * 1000;
+	public final int TIMEOUT = 30 * 1000;
 
 	/** Timouet (in Milliseconds) to send out unsolicited RIP responses out on all route interfaces */
-	public static final int TIME_RIP_BROADCAST = 10 * 1000;
+	public final int TIME_RIP_BROADCAST = 10 * 1000;
 
 	/** Entries in the route table */
 	private List<RouteEntry> entries;
@@ -36,12 +36,15 @@ public class RouteTable implements Runnable
 	/** Timeout (in Milliseconds) variable to send out unsolicited RIP responses out on all route interface */
 	private long timeToBroadcast;
 
+	/** Reference to the Router for this route table */
+	private Router router;
 
 	/**
 	 * Initialize an empty route table.
 	 */
-	public RouteTable()
+	public RouteTable(Router router)
 	{ 
+		this.router = router;
 		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
 		this.timeToBroadcast = System.currentTimeMillis();
 		this.timeoutThread = new Thread(this);
@@ -66,7 +69,7 @@ public class RouteTable implements Runnable
 
 			//check if its time to flood RIPresp
 			if((System.currentTimeMillis() - this.timeToBroadcast) % this.TIME_RIP_BROADCAST == 0)
-			{ Router.floodRIPResp(); }
+			{ this.router.floodRIPResp(); }
 		}
 	}
 

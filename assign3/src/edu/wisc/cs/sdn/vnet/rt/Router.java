@@ -38,7 +38,7 @@ public class Router extends Device
 	public Router(String host, DumpFile logfile)
 	{
 		super(host,logfile);
-		this.routeTable = new RouteTable();
+		this.routeTable = new RouteTable(this);
 		this.arpCache = new ArpCache();	
 	}
 
@@ -402,7 +402,7 @@ public class Router extends Device
 		return;
 	}
 
-	private void buildRipRouteTable()
+	public void buildRipRouteTable()
 	{
 		// Add RouteTable entries for directly reachable subnets
 		// QUESTION: Should we check if these interfaces are directly reachable by checking if gateway address is 0, the definition of durectly reachable is not understood. Can we assume the initial interfaces are the ones that are directly reachable???
@@ -463,7 +463,7 @@ public class Router extends Device
 		}
 	}
 
-	public static void floodRIPResp()
+	public void floodRIPResp()
 	{
 		for (Iface iface : this.interfaces.values())
 		{
@@ -483,7 +483,7 @@ public class Router extends Device
 			RIPv2 rip = new RIPv2();
 			rip.setCommand(RIPv2.COMMAND_RESPONSE);
 
-			for (RouteEntry tableEntry : routeTable.getEntries())
+			for (RouteEntry tableEntry : this.routeTable.getEntries())
 			{
 				RIPv2Entry ripEntry = new RIPv2Entry();
 
