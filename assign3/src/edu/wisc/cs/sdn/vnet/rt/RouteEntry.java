@@ -84,17 +84,11 @@ public class RouteEntry
 	public void setMetric(int metric)
 	{ this.metric = metric; }
 
-    public byte getTtl() 
+    	public byte getTtl() 
 	{ return this.ttl; }
 
-    public void setTtl(byte ttl) 
+    	public void setTtl(byte ttl) 
 	{ this.ttl = ttl; }
-
-	public int getTimeUpdated()
-	{ return this.timeUpdated; }
-
-	public void setTimeSinceUpdate(int time)
-	{ this.timeUpdated = time; }
 	
 	public String toString()
 	{

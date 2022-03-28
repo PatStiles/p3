@@ -53,7 +53,7 @@ public class Router extends Device
 			{ break; }
 
 			if (routeTable.getTimeToBroadcast() % TIME_RIP_BROADCAST  == 0)
-			{ this.broadcastRIP(); }
+			{ this.broadcastRIPResp(); }
 		}
 	}
 
@@ -354,12 +354,12 @@ public class Router extends Device
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
 		//This creates a ByteBuffer of the entire IPv4 message then slice it and removes the IPv4 header. Instructions weren't that clear on what ethe spec is???
-		ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
-		ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
-		bbuf.get(payload.array(), (int)ipPacket.getHeaderLength(), payload.capacity());
-		Data data = new Data(payload.array());
+		//ByteBuffer bbuf = ByteBuffer.allocate(ipPacket.serialize().length);
+		//ByteBuffer payload = ByteBuffer.allocate(ipPacket.serialize().length - (int)ipPacket.getHeaderLength());
+		//bbuf.get(payload.array(), (int)ipPacket.getHeaderLength(), payload.capacity());
+		//Data data = new Data(payload.array());
 
-		//Set Payloads
+		//Set Payloads -> Should be original payload of ICMP
 		icmp.setPayload(((ICMP)ipPacket.getPayload()).getPayload());	
 		ip.setPayload(icmp);
 		ether.setPayload(ip);
@@ -387,11 +387,18 @@ public class Router extends Device
 					// TODO: found a better route
 					match.setMetric(newCost + 1);
 					match.setTimeSinceUpdate(0);
+					
+					//Flood RIP resp.
+					this.floodRIP();
+
 					break;
 				}
 				else if (entry.getNextHopAddress() == match.getDestinationAddress())
 				{
 					// TODO: metric for current next hop may have changed
+					// Flood RIP resp.
+					this.floodRIPResp();
+
 					break;
 				}
 				else 
@@ -403,6 +410,10 @@ public class Router extends Device
 			else
 			{
 				// TODO: add new route to the table
+
+
+				//Flood RIP resp.
+				this.floodRIPResp();
 
 			}
 		}
@@ -434,6 +445,7 @@ public class Router extends Device
 	private void buildRipRouteTable()
 	{
 		// Add RouteTable entries for directly reachable subnets
+		// QUESTION: Should we check if these interfaces are directly reachable by checking if gateway address is 0, the definition of durectly reachable is not understood. Can we assume the initial interfaces are the ones that are directly reachable???
 		for (Iface iface : this.interfaces.values())
 		{
 			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
@@ -454,6 +466,14 @@ public class Router extends Device
 		{
 			Ethernet etherPacket = new Ethernet();
 			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
+			etherPacket.setEtherType(Ethernet.TYPE_IPv4);
+
+			//Create new IPv4 packet
+			IPv4 ip = new IPv4();
+			ip.setTtl((byte)64);
+			ip.setProtocol(IPv4.PROTOCOL_UDP);
+			ip.setSourceAddress(iface.getIpAddress();
+			ip.setDestinationAddress(RIP_IP_ADDRESS);
 
 			// TODO: use IP packet with UDP protocol instead ?
 			UDP udpPacket = new UDP();
@@ -475,8 +495,50 @@ public class Router extends Device
 			}
 			
 			udpPacket.setPayload(rip);
-			etherPacket.setPayload(udpPacket);
+			ip.setPayload(udpPacket);
+			etherPacket.setPayload(ip);
 			this.sendPacket(etherPacket, iface);
 		}
 	}
+
+	private void floodRIPResp()
+	{
+		for (Iface iface : this.interfaces.values())
+		{
+			Ethernet etherPacket = new Ethernet();
+			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
+
+			IPv4 ip = new IPv4();
+			ip.setTtl((byte)64);
+			ip.setProtocol(IPv4.PROTOCOL_UDP);
+			ip.setSourceAddress(iface.getIpAddress();
+			ip.setDestinationAddress(RIP_IP_ADDRESS);
+
+			// TODO: use IP packet with UDP protocol instead ?
+			UDP udpPacket = new UDP();
+			udpPacket.setDestinationPort(UDP.RIP_PORT);
+
+			RIPv2 rip = new RIPv2();
+			rip.setCommand(RIPv2.COMMAND_RESPONSE);
+
+			for (RouteEntry tableEntry : routeTable.getEntries())
+			{
+				RIPv2Entry ripEntry = new RIPv2Entry();
+
+				// TODO: set next hop address ?
+				ripEntry.setAddress(tableEntry.getDestinationAddress());
+				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
+				ripEntry.setMetric(tableEntry.getMetric());
+
+				rip.addEntry(ripEntry);
+			}
+			
+			udpPacket.setPayload(rip);
+			ip.setPayload(udpPacket);
+			etherPacket.setPayload(ip);
+			this.sendPacket(etherPacket, iface);
+		}
+
+	}
+ 
 }

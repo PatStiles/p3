@@ -58,7 +58,7 @@ public class RouteTable implements Runnable
 
 			for (RouteEntry entry : this.entries)
 			{
-				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > TIMEOUT)
+				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > TIMEOUT && entry.getGatewayAddress() != 0)
 				{ this.remove(entry.getDestinationAddress(), entry.getMaskAddress()); }
 			}
 		}
