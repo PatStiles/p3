@@ -46,9 +46,7 @@ public class RouteTable implements Runnable
 	{ 
 		this.router = router;
 		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
-		this.timeToBroadcast = System.currentTimeMillis();
 		this.timeoutThread = new Thread(this);
-		this.timeoutThread.start();
 	}
 
 	public void run()
@@ -74,6 +72,12 @@ public class RouteTable implements Runnable
 				this.timeToBroadcast = System.currentTimeMillis();
 			}
 		}
+	}
+
+	public void startRipThread()
+	{
+		this.timeToBroadcast = System.currentTimeMillis();
+		this.timeoutThread.start();
 	}
 
 	public int getLength()
