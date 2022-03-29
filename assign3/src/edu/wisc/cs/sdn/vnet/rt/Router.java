@@ -450,6 +450,7 @@ public class Router extends Device
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 				ripEntry.setMetric(tableEntry.getMetric());
+				ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 				rip.addEntry(ripEntry);
 			}
@@ -468,6 +469,7 @@ public class Router extends Device
 			Ethernet etherPacket = new Ethernet();
 			etherPacket.setSourceMACAddress(iface.getMacAddress().toString());
 			etherPacket.setDestinationMACAddress(RIP_MAC_ADDRESS.toString());
+			etherPacket.setEtherType(Ethernet.TYPE_IPv4);
 
 			IPv4 ip = new IPv4();
 			ip.setTtl((byte)64);
@@ -489,6 +491,7 @@ public class Router extends Device
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 				ripEntry.setMetric(tableEntry.getMetric());
+				ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 				rip.addEntry(ripEntry);
 			}
