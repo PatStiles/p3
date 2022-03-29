@@ -350,13 +350,30 @@ public class Router extends Device
 		{
 			for (RIPv2Entry entry : rip.getEntries())
 			{
+				// check in routetable if matching entry
+				// if no match, add entry to route table and rip table
+				// keep variable for if changes were made
+				// check if rip entry or not
+					// if not, ignore
+					// if it is, check if coming from same router (old next hop == current next hop)
+						// compare metrics, if not same, update, put updated entry in rip table
+					// if not, check if current metric < old metric
+						// path shortened
+						// remove old entry from rip table
+						// update route table with new entry
+						// update rip table
+							// set old entry's metric and next hop address to new
+							// insert new entry to route table with time 0
+				// if changes made, send route and rip entries to requesting interface
+
+
 				int dstAddr = entry.getAddress();
-				RouteEntry match = routeTable.lookup(dstAddr);
+				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 
 				// See 3.4.2 implementation in textbook
-				if (match != null)
+				if (match != null && match.getGatewayAddress() != EMPTY_GATEWAY_ADDRESS)
 				{
-					int curCost = match.getMetric();
+					int curCost = match.getRipEntry().getMetric();
 					int newCost = entry.getMetric();
 
 					if (newCost + 1 < curCost)
@@ -370,9 +387,18 @@ public class Router extends Device
 
 						break;
 					}
-					else if (entry.getNextHopAddress() == match.getDestinationAddress())
+					else if (match.isRipEntry() && entry.getNextHopAddress() == match.getRipEntry().getNextHopAddress())
 					{
 						// TODO: metric for current next hop may have changed
+						if (newCost != curCost)
+						{
+							//this.routeTable.remove(match.getDestinationAddress(), maskIp)
+							match.setMetric(newCost);
+							// set rip entry
+							match.setTimeUpdated();
+
+							
+						}
 
 						// Flood RIP resp.
 						//this.floodRIPResp();

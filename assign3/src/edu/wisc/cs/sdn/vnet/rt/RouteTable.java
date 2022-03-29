@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Collections;
+import java.util.HashMap;
 import java.lang.InterruptedException;
 
 import net.floodlightcontroller.packet.IPv4;
-
+import net.floodlightcontroller.packet.RIPv2Entry;
 import edu.wisc.cs.sdn.vnet.Iface;
 
 /**
@@ -38,6 +39,9 @@ public class RouteTable implements Runnable
 
 	/** Reference to the Router for this route table */
 	private Router router;
+
+	/** Map of RIPv2Entry to time updated */
+	private HashMap<RIPv2Entry, Integer> ripTable = new HashMap<RIPv2Entry, Integer>();
 
 	/**
 	 * Initialize an empty route table.
@@ -297,7 +301,7 @@ public class RouteTable implements Runnable
 	 * @param maskIp subnet mask of the entry to find
 	 * @return a matching entry if one was found, otherwise null
 	 */
-	private RouteEntry find(int dstIp, int maskIp)
+	public RouteEntry find(int dstIp, int maskIp)
 	{
 		synchronized(this.entries)
 		{

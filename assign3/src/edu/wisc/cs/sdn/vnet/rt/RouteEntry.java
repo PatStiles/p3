@@ -1,6 +1,7 @@
 package edu.wisc.cs.sdn.vnet.rt;
 
 import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.RIPv2Entry;
 import edu.wisc.cs.sdn.vnet.Iface;
 
 /**
@@ -30,6 +31,10 @@ public class RouteEntry
 	
 	/** Time (in Milliseconds since the epoch) the entry was updated */
 	private long timeUpdated;
+
+	private RIPv2Entry ripEntry;
+
+	private boolean isRipEntry;
 	
 	/**
 	 * Create a new route table entry.
@@ -48,6 +53,31 @@ public class RouteEntry
 		this.iface = iface;
 		this.timeUpdated = System.currentTimeMillis();
 	}
+
+	/**
+	 * Create a new route table entry.
+	 * @param destinationAddress destination IP address
+	 * @param gatewayAddress gateway IP address
+	 * @param maskAddress subnet mask
+	 * @param iface the router interface out which packets should 
+	 *        be sent to reach the destination or gateway
+	 */
+	public RouteEntry(int destinationAddress, int gatewayAddress, 
+			int maskAddress, Iface iface, RIPv2Entry ripEntry)
+	{
+		this.destinationAddress = destinationAddress;
+		this.gatewayAddress = gatewayAddress;
+		this.maskAddress = maskAddress;
+		this.iface = iface;
+		this.timeUpdated = System.currentTimeMillis();
+		this.ripEntry = ripEntry;
+	}
+
+	public RIPv2Entry getRipEntry()
+	{ return this.ripEntry; }
+
+	public boolean isRipEntry()
+	{ return this.ripEntry != null; }
 	
 	/**
 	 * @return destination IP address
