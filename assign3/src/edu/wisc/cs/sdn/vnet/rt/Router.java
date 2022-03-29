@@ -411,6 +411,10 @@ public class Router extends Device
 
 				if (changesMade)
 				{
+					System.out.println("-----Updated route table-----");
+					System.out.println(this.routeTable.toString());
+					System.out.println("-----------------------------");
+
 					this.sendRipResponse(inIface);
 				}
 			}		
