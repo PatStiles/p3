@@ -380,14 +380,27 @@ public class Router extends Device
 						{
 							if (oldEntry.getMetric() != entry.getMetric())
 							{
-								oldEntry.setMetric(entry.getMetric());
-								this.routeTable.addRipEntry(entry);
-								
-								changesMade = true;
+								if (entry.getMetric() > 15)
+								{
+									this.routeTable.removeRipEntry(oldEntry);
+								}
+								else
+								{
+									oldEntry.setMetric(entry.getMetric());
+									this.routeTable.addRipEntry(entry);
+									
+									changesMade = true;
+								}
 							}
 						}
 						else if (oldEntry.getMetric() < entry.getMetric())
 						{
+							if (entry.getMetric() > 15)
+							{
+								this.routeTable.removeRipEntry(oldEntry);
+							}
+							else
+							{
 								// Found a shorter path
 								this.routeTable.removeRipEntry(entry);
 
@@ -398,9 +411,10 @@ public class Router extends Device
 								oldEntry.setMetric(entry.getMetric());
 								oldEntry.setNextHopAddress(entry.getNextHopAddress());
 
-								this.routeTable.addRipEntry(entry);;
+								this.routeTable.addRipEntry(entry);
 
 								changesMade = true;
+							}
 						}
 					}
 				}
