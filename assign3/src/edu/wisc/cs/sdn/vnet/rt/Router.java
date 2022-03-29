@@ -374,7 +374,7 @@ public class Router extends Device
 						// TODO: metric for current next hop may have changed
 
 						// Flood RIP resp.
-						this.floodRIPResp();
+						//this.floodRIPResp();
 						break;
 					}
 					else 
@@ -453,22 +453,6 @@ public class Router extends Device
 
 			RIPv2 rip = new RIPv2();
 			rip.setCommand(RIPv2.COMMAND_REQUEST);
-
-			// Don't send entries with requests
-			/*
-			for (RouteEntry tableEntry : routeTable.getEntries())
-			{
-				RIPv2Entry ripEntry = new RIPv2Entry();
-
-				// TODO: set next hop address ?
-				ripEntry.setAddress(tableEntry.getDestinationAddress());
-				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
-				ripEntry.setMetric(tableEntry.getMetric());
-				ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
-
-				rip.addEntry(ripEntry);
-			}
-			*/
 
 			udpPacket.setPayload(rip);
 			ip.setPayload(udpPacket);

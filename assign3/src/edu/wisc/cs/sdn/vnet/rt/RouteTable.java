@@ -68,8 +68,11 @@ public class RouteTable implements Runnable
 			}
 
 			//check if its time to flood RIPresp
-			if((System.currentTimeMillis() - this.timeToBroadcast) % this.TIME_RIP_BROADCAST == 0)
-			{ this.router.floodRIPResp(); }
+			if ((System.currentTimeMillis() - this.timeToBroadcast) > this.TIME_RIP_BROADCAST)
+			{ 
+				this.router.floodRIPResp(); 
+				this.timeToBroadcast = System.currentTimeMillis();
+			}
 		}
 	}
 
