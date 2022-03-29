@@ -86,19 +86,20 @@ public class RouteEntry
 	public void setMetric(int metric)
 	{ this.metric = metric; }
 
-    	public byte getTtl() 
+    public byte getTtl() 
 	{ return this.ttl; }
 
-    	public void setTtl(byte ttl) 
+    public void setTtl(byte ttl) 
 	{ this.ttl = ttl; }
 	
 	public String toString()
 	{
-		return String.format("%s \t%s \t%s \t%s",
+		return String.format("%s \t%s \t%s \t%s \t%d",
 				IPv4.fromIPv4Address(this.destinationAddress),
 				IPv4.fromIPv4Address(this.gatewayAddress),
 				IPv4.fromIPv4Address(this.maskAddress),
-				this.iface.getName());
+				this.iface.getName(),
+				this.getMetric());
 	}
 
 	public long getTimeUpdated()

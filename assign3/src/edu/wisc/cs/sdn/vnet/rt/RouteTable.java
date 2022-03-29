@@ -290,7 +290,7 @@ public class RouteTable implements Runnable
 			if (0 == this.entries.size())
 			{ return " WARNING: route table empty"; }
 
-			String result = "Destination\tGateway\t\tMask\t\tIface\n";
+			String result = "Destination\tGateway\t\tMask\t\tIface\t\tCost\n";
 			for (RouteEntry entry : entries)
 			{ result += entry.toString()+"\n"; }
 			return result;
