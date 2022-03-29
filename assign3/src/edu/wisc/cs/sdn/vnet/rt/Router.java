@@ -429,6 +429,7 @@ public class Router extends Device
 		System.out.print(this.routeTable.toString());
 		System.out.println("-------------------------------------------------");
 
+		this.routeTable.startRipThread();
 		this.broadcastRIP();
 	}
 
