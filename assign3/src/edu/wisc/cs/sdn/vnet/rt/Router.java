@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import edu.wisc.cs.sdn.vnet.Device;
 import edu.wisc.cs.sdn.vnet.DumpFile;
 import edu.wisc.cs.sdn.vnet.Iface;
-
+import edu.wisc.cs.sdn.vnet.rt.RouteTable.tableEntry;
 import net.floodlightcontroller.packet.Data;
 import net.floodlightcontroller.packet.Ethernet;
 import net.floodlightcontroller.packet.ICMP;
@@ -372,7 +372,7 @@ public class Router extends Device
 
 				if (match != null && match.isRipEntry())
 				{
-					RIPv2Entry oldEntry = this.routeTable.ripTable.get(entry.getAddress);
+					RIPv2Entry oldEntry = this.routeTable.ripTable.get(entry.getAddress()).ripEntry;
 
 					if (oldEntry.getNextHopAddress() == entry.getNextHopAddress())
 					{
@@ -420,7 +420,7 @@ public class Router extends Device
 				else
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getIpAddress(), entry.getIpAddress() & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
+					this.routeTable.insert(entry.getAddress(), entry.getAddress() & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
@@ -528,9 +528,9 @@ public class Router extends Device
 			}
 
 			// TA said to send route entries and rip entries (?)
-			for (RIPv2Entry entry : this.routeTable.ripTable.values())
+			for (tableEntry entry : this.routeTable.ripTable.values())
 			{
-				rip.addEntry(entry);
+				rip.addEntry(entry.ripEntry);
 			}
 			
 			udpPacket.setPayload(rip);
@@ -573,9 +573,9 @@ public class Router extends Device
 		}
 
 		// TA said to send route entries and rip entries (?)
-		for (RIPv2Entry entry : this.routeTable.ripTable.values())
+		for (tableEntry entry : this.routeTable.ripTable.values())
 		{
-			rip.addEntry(entry);
+			rip.addEntry(entry.ripEntry);
 		}
 		
 		udpPacket.setPayload(rip);
