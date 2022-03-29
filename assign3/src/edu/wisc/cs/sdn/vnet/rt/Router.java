@@ -387,7 +387,7 @@ public class Router extends Device
 				else
 				{
 					// Add new route to the table
-					this.routeTable.insert(dstAddr, dstAddr & entry.getSubnetMask(), entry.getSubnetMask(), inIface);
+					this.routeTable.insert(dstAddr, dstAddr & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
 
 					//Flood RIP resp.
 					this.floodRIPResp();
@@ -415,7 +415,7 @@ public class Router extends Device
 			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
 			int maskAddress = iface.getSubnetMask();
 
-			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface);
+			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface, 1);
 		}
 
 		System.out.println("Loaded route table from directly reachable subnets");

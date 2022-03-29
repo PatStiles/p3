@@ -230,6 +230,30 @@ public class RouteTable implements Runnable
 	}
 
 	/**
+	 * Add an entry to the route table with a cost metric.
+	 * @param dstIp destination IP
+	 * @param gwIp gateway IP
+	 * @param maskIp subnet mask
+	 * @param iface router interface out which to send packets to reach the 
+	 *        destination or gateway
+	 */
+	public void insert(int dstIp, int gwIp, int maskIp, Iface iface, int metric)
+	{
+		synchronized(this.entries)
+		{ 
+			RouteEntry entry = this.find(dstIp, maskIp);
+			if(entry != null)
+			{ this.update(dstIp, maskIp, gwIp, iface); }
+			else
+			{
+				RouteEntry newEntry = new RouteEntry(dstIp, gwIp, maskIp, iface);
+				newEntry.setMetric(metric);
+				this.entries.add(newEntry);
+			}
+		}
+	}
+
+	/**
 	 * Remove an entry from the route table.
 	 * @param dstIP destination IP of the entry to remove
 	 * @param maskIp subnet mask of the entry to remove
