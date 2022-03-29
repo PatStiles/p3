@@ -370,57 +370,57 @@ public class Router extends Device
 
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 
-				if (match != null && match.getGatewayAddress() != EMPTY_GATEWAY_ADDRESS)
+				if (match != null && match.isRipEntry())
 				{
-					RIPv2Entry oldEntry = match.getRipEntry();
+					RIPv2Entry oldEntry = this.routeTable.ripTable.get(entry.getAddress);
 
-					if (match.isRipEntry())
+					if (oldEntry.getNextHopAddress() == entry.getNextHopAddress())
 					{
-						if (oldEntry.getNextHopAddress() == entry.getNextHopAddress())
-						{
-							if (oldEntry.getMetric() != entry.getMetric())
-							{
-								if (entry.getMetric() > 15)
-								{
-									this.routeTable.removeRipEntry(oldEntry);
-								}
-								else
-								{
-									oldEntry.setMetric(entry.getMetric());
-									this.routeTable.addRipEntry(entry);
-									
-									changesMade = true;
-								}
-							}
-						}
-						else if (oldEntry.getMetric() < entry.getMetric())
+						if (oldEntry.getMetric() != entry.getMetric())
 						{
 							if (entry.getMetric() > 15)
 							{
 								this.routeTable.removeRipEntry(oldEntry);
+								this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
 							}
 							else
 							{
-								// Found a shorter path
-								this.routeTable.removeRipEntry(entry);
-
-								// Update route table with new entry
-								match.setMetric(entry.getMetric());
-
-								// Update old RIP entry
 								oldEntry.setMetric(entry.getMetric());
-								oldEntry.setNextHopAddress(entry.getNextHopAddress());
-
 								this.routeTable.addRipEntry(entry);
-
+								
 								changesMade = true;
 							}
+						}
+					}
+					else if (oldEntry.getMetric() < entry.getMetric())
+					{
+						if (entry.getMetric() > 15)
+						{
+							this.routeTable.removeRipEntry(oldEntry);
+							this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
+						}
+						else
+						{
+							// Found a shorter path
+							this.routeTable.removeRipEntry(entry);
+
+							// Update route table with new entry
+							match.setMetric(entry.getMetric());
+
+							// Update old RIP entry
+							oldEntry.setMetric(entry.getMetric());
+							oldEntry.setNextHopAddress(entry.getNextHopAddress());
+
+							this.routeTable.addRipEntry(entry);
+
+							changesMade = true;
 						}
 					}
 				}
 				else
 				{
 					this.routeTable.addRipEntry(entry);
+					this.routeTable.insert(entry.getIpAddress(), entry.getIpAddress() & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
