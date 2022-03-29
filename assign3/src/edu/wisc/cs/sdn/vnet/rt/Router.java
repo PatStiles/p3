@@ -387,7 +387,7 @@ public class Router extends Device
 				else
 				{
 					// Add new route to the table
-					this.routeTable.insert(dstAddr, EMPTY_GATEWAY_ADDRESS, entry.getSubnetMask(), inIface);
+					this.routeTable.insert(dstAddr, dstAddr & entry.getSubnetMask(), entry.getSubnetMask(), inIface);
 
 					//Flood RIP resp.
 					this.floodRIPResp();
@@ -402,16 +402,6 @@ public class Router extends Device
 			// Send response for the given request
 			this.sendRipResponse(inIface);
 		}
-
-		// TODO: Send RIP response packets
-		// For sending requests and unsolicited responses (defined as static constants):
-		//   Destination IP 		224.0.0.9
-		//   Destination Ethernet	FF:FF:FF:FF:FF:FF
-		// For sending response for specific request:
-		//   Destination IP			inIface.getIpAddress()
-		//   Destination Ethernet	inIface.getMacAddress()
-		//
-		//   To handle RIP routing use the algorithm in the slides of weeek 7 slide 12
 
 		return;
 	}
