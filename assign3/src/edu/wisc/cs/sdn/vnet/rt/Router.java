@@ -430,6 +430,7 @@ public class Router extends Device
 		System.out.println("-------------------------------------------------");
 
 		this.broadcastRIP();
+		this.routeTable.startRipThread();
 	}
 
 	private void broadcastRIP()
