@@ -156,14 +156,16 @@ public class Router extends Device
 				{
 
 					Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 3,etherPacket, inIface);
-					this.sendPacket(icmpMsg, iface);
+					if (icmpMsg != null)
+					{ this.sendPacket(icmpMsg, iface); }
 					return; 
 				}
 
 				if(ipPacket.getProtocol() == IPv4.PROTOCOL_ICMP)
 				{
 					Ethernet icmpMsg = genEchoMsg((byte) 0, (byte) 0,etherPacket, inIface);
-					this.sendPacket(icmpMsg, iface);
+					if (icmpMsg != null)
+					{ this.sendPacket(icmpMsg, iface); }
 					return; 
 					
 				}
@@ -193,7 +195,6 @@ public class Router extends Device
 		if (null == bestMatch)
 		{ 
 			Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 0, etherPacket, inIface);
-
 			if (icmpMsg != null)
 			{ this.sendPacket(icmpMsg, inIface); }
 
@@ -218,7 +219,7 @@ public class Router extends Device
 		if (null == arpEntry)
 		{ 	
 			Ethernet icmpMsg = genICMPMsg((byte) 3, (byte) 1, etherPacket, inIface);
-			this.sendPacket(icmpMsg, outIface);
+			this.sendPacket(icmpMsg, inIface);
 			return; 
 		}
 
