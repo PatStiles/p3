@@ -6,10 +6,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 import java.lang.InterruptedException;
 
 import net.floodlightcontroller.packet.IPv4;
@@ -32,7 +34,7 @@ public class RouteTable implements Runnable
 	/** Entries in the route table */
 	private List<RouteEntry> entries;
 	
-	private class tableEntry {
+	public class tableEntry {
 		public RIPv2Entry ripEntry;
 		public long timeOut;
 		
@@ -40,10 +42,21 @@ public class RouteTable implements Runnable
 			ripEntry = r;
 			timeOut = System.currentTimeMillis();
 		}
+
+	}
+
+	public void addRipEntry(RIPv2Entry entry)
+	{
+		this.ripTable.put(Integer.valueOf(entry.getAddress()), new tableEntry(entry));
+	}
+
+	public void removeRipEntry(RIPv2Entry entry)
+	{
+		this.ripTable.remove(Integer.valueOf(entry.getAddress()));
 	}
 
 	//Hashmap to track addresses
-	private static ConcurrentHashMap<Integer,tableEntry> ripTable;
+	public ConcurrentHashMap<Integer,tableEntry> ripTable;
 
 	/** Thread for timing out requests and entries in cache */
 	private Thread timeoutThread;
@@ -323,7 +336,7 @@ public class RouteTable implements Runnable
 	 * @param maskIp subnet mask of the entry to find
 	 * @return a matching entry if one was found, otherwise null
 	 */
-	private RouteEntry find(int dstIp, int maskIp)
+	public RouteEntry find(int dstIp, int maskIp)
 	{
 		synchronized(this.entries)
 		{
