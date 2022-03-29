@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
 import java.lang.InterruptedException;
 
 import net.floodlightcontroller.packet.IPv4;
+import net.floodlightcontroller.packet.RIPv2Entry;
 
 import edu.wisc.cs.sdn.vnet.Iface;
 
@@ -29,6 +31,19 @@ public class RouteTable implements Runnable
 
 	/** Entries in the route table */
 	private List<RouteEntry> entries;
+	
+	private class tableEntry {
+		public RIPv2Entry ripEntry;
+		public long timeOut;
+		
+		public tableEntry(RIPv2Entry r) {
+			ripEntry = r;
+			timeOut = System.currentTimeMillis();
+		}
+	}
+
+	//Hashmap to track addresses
+	private static ConcurrentHashMap<Integer,tableEntry> ripTable;
 
 	/** Thread for timing out requests and entries in cache */
 	private Thread timeoutThread;
@@ -46,6 +61,7 @@ public class RouteTable implements Runnable
 	{ 
 		this.router = router;
 		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
+		this.ripTable = new ConcurrentHashMap<Integer, tableEntry>();
 		this.timeoutThread = new Thread(this);
 	}
 
@@ -59,10 +75,20 @@ public class RouteTable implements Runnable
 			{ break; }
 
 			//check if entry has timed out, is not a directly attached subnet (gateway != 0) and remove
-			for (RouteEntry entry : this.entries)
+			for (tableEntry entry : this.ripTable.values())
 			{
-				if ((System.currentTimeMillis() - entry.getTimeUpdated()) > this.TIMEOUT && entry.getGatewayAddress() != 0)
-				{ this.remove(entry.getDestinationAddress(), entry.getMaskAddress()); }
+				if ((System.currentTimeMillis() - entry.timeOut) > this.TIMEOUT)
+				{ 
+					this.ripTable.remove(Integer.valueOf(entry.ripEntry.getAddress()));
+			       		
+					synchronized(this.entries)
+				       	{
+						RouteEntry r = this.lookup(entry.ripEntry.getAddress());
+						if(r != null && r.getGatewayAddress() != 0)
+						{ this.remove(r.getDestinationAddress(), r.getMaskAddress()); }
+					}
+				}
+				
 			}
 
 			//check if its time to flood RIPresp
@@ -81,7 +107,7 @@ public class RouteTable implements Runnable
 	}
 
 	public int getLength()
-	{ return entries.size(); }
+	{ return this.entries.size(); }
 
 	public List<RouteEntry> getEntries()
 	{ return this.entries; }
