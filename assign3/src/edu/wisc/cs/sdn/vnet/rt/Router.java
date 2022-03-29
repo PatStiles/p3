@@ -452,6 +452,8 @@ public class Router extends Device
 			RIPv2 rip = new RIPv2();
 			rip.setCommand(RIPv2.COMMAND_REQUEST);
 
+			// Don't send entries with requests
+			/*
 			for (RouteEntry tableEntry : routeTable.getEntries())
 			{
 				RIPv2Entry ripEntry = new RIPv2Entry();
@@ -464,7 +466,8 @@ public class Router extends Device
 
 				rip.addEntry(ripEntry);
 			}
-			
+			*/
+
 			udpPacket.setPayload(rip);
 			ip.setPayload(udpPacket);
 			etherPacket.setPayload(ip);
