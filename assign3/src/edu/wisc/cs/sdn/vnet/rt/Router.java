@@ -266,6 +266,7 @@ public class Router extends Device
 		ICMP icmp = new ICMP();
 		icmp.setIcmpType(icmpType);
 		icmp.setIcmpCode(icmpCode);
+		icmp.resetChecksum();
 
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
@@ -320,6 +321,7 @@ public class Router extends Device
 		ICMP icmp = new ICMP();
 		icmp.setIcmpType(icmpType);
 		icmp.setIcmpCode(icmpCode);
+		icmp.resetChecksum();
 
 		//Set Data for ICMP Header
 		//If cast of getHeaderLength() is invalid try Byte.toUnsignedInt
