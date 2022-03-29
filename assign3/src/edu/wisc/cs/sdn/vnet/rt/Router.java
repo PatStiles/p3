@@ -393,6 +393,9 @@ public class Router extends Device
 					this.floodRIPResp();
 				}
 			}
+
+			System.out.println("Route table updated: --------");
+			System.out.println(this.routeTable.toString());
 		}
 		else
 		{
@@ -465,6 +468,8 @@ public class Router extends Device
 
 	public void floodRIPResp()
 	{
+		System.out.println("Flood RIP Responses");
+
 		for (Iface iface : this.interfaces.values())
 		{
 			Ethernet etherPacket = new Ethernet();
@@ -506,6 +511,8 @@ public class Router extends Device
 
 	private void sendRipResponse(Iface inIface)
 	{
+		System.out.println("Send RIP response");
+
 		Ethernet etherPacket = new Ethernet();
 		etherPacket.setSourceMACAddress(inIface.getMacAddress().toString());
 		etherPacket.setDestinationMACAddress(inIface.getMacAddress().toString());
