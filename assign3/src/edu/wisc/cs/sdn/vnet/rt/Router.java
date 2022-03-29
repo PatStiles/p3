@@ -341,7 +341,9 @@ public class Router extends Device
 	public void handleRipPacket(Ethernet etherPacket, Iface inIface) 
 	{
 		// TODO: Update route table
-		RIPv2 rip = (RIPv2)etherPacket.getPayload();
+		IPv4 ip = (IPv4)etherPacket.getPayload();
+		UDP udp = (UDP)ip.getPayload();
+		RIPv2 rip = (RIPv2)udp.getPayload();
 
 		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
@@ -519,6 +521,7 @@ public class Router extends Device
 	private void sendRipResponse(Iface inIface)
 	{
 		Ethernet etherPacket = new Ethernet();
+		etherPacket.setSourceMACAddress(inIface.getMacAddress().toString());
 		etherPacket.setDestinationMACAddress(inIface.getMacAddress().toString());
 		etherPacket.setEtherType(Ethernet.TYPE_IPv4);
 
