@@ -117,7 +117,7 @@ public class Router extends Device
 		// Get IP header
 		IPv4 ipPacket = (IPv4)etherPacket.getPayload();
 		// Handle RIP packets
-		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ((UDP)ipPacket.getPayload()).getDestinationPort() == UDP.RIP_PORT && ipPacket.getDestinationAddress() == RIP_IP_ADDRESS && etherPacket.getDestinationMAC().equals(RIP_MAC_ADDRESS))
+		if (ipPacket.getProtocol() == IPv4.PROTOCOL_UDP && ((UDP)ipPacket.getPayload()).getDestinationPort() == UDP.RIP_PORT)
 		{
 			System.out.println("Handle RIP packet");
 			handleRipPacket(etherPacket, inIface);
