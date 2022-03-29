@@ -343,50 +343,58 @@ public class Router extends Device
 		// TODO: Update route table
 		RIPv2 rip = (RIPv2)etherPacket.getPayload();
 
-		for (RIPv2Entry entry : rip.getEntries())
+		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
-			int dstAddr = entry.getAddress();
-			RouteEntry match = routeTable.lookup(dstAddr);
-
-			// See 3.4.2 implementation in textbook
-			if (match != null)
+			for (RIPv2Entry entry : rip.getEntries())
 			{
-				int curCost = match.getMetric();
-				int newCost = entry.getMetric();
+				int dstAddr = entry.getAddress();
+				RouteEntry match = routeTable.lookup(dstAddr);
 
-				if (newCost + 1 < curCost)
+				// See 3.4.2 implementation in textbook
+				if (match != null)
 				{
-					// TODO: found a better route
-					match.setMetric(newCost + 1);
-					match.setTimeUpdated();
-					
+					int curCost = match.getMetric();
+					int newCost = entry.getMetric();
+
+					if (newCost + 1 < curCost)
+					{
+						// TODO: found a better route
+						match.setMetric(newCost + 1);
+						match.setTimeUpdated();
+						
+						//Flood RIP resp.
+						this.floodRIPResp();
+
+						break;
+					}
+					else if (entry.getNextHopAddress() == match.getDestinationAddress())
+					{
+						// TODO: metric for current next hop may have changed
+
+						// Flood RIP resp.
+						this.floodRIPResp();
+						break;
+					}
+					else 
+					{
+						// Ignore this route
+						return;
+					}
+				}
+				else
+				{
+					// Add new route to the table
+					this.routeTable.insert(dstAddr, EMPTY_GATEWAY_ADDRESS, entry.getSubnetMask(), inIface);
+
 					//Flood RIP resp.
 					this.floodRIPResp();
-
-					break;
-				}
-				else if (entry.getNextHopAddress() == match.getDestinationAddress())
-				{
-					// TODO: metric for current next hop may have changed
-
-					// Flood RIP resp.
-					this.floodRIPResp();
-					break;
-				}
-				else 
-				{
-					// Ignore this route
-					return;
 				}
 			}
-			else
-			{
-				// Add new route to the table
-				this.routeTable.insert(dstAddr, EMPTY_GATEWAY_ADDRESS, entry.getSubnetMask(), inIface);
-
-				//Flood RIP resp.
-				this.floodRIPResp();
-			}
+		}
+		else
+		{
+			// Send response for the given request
+			this.sendRipResponse(inIface);
 		}
 
 		// TODO: Send RIP response packets
@@ -503,7 +511,39 @@ public class Router extends Device
 			etherPacket.setPayload(ip);
 			this.sendPacket(etherPacket, iface);
 		}
-
 	}
- 
+
+	private void sendRipResponse(Iface inIface)
+	{
+		Ethernet etherPacket = new Ethernet();
+		etherPacket.setDestinationMACAddress(inIface.getMacAddress().toString());
+		etherPacket.setEtherType(Ethernet.TYPE_IPv4);
+
+		IPv4 ip = new IPv4();
+		ip.setTtl((byte)64);
+		ip.setProtocol(IPv4.PROTOCOL_UDP);
+		ip.setDestinationAddress(inIface.getIpAddress());
+
+		UDP udpPacket = new UDP();
+		udpPacket.setDestinationPort(UDP.RIP_PORT);
+
+		RIPv2 rip = new RIPv2();
+		rip.setCommand(RIPv2.COMMAND_RESPONSE);
+
+		for (RouteEntry tableEntry : this.routeTable.getEntries())
+		{
+			RIPv2Entry ripEntry = new RIPv2Entry();
+
+			ripEntry.setAddress(tableEntry.getDestinationAddress());
+			ripEntry.setSubnetMask(tableEntry.getMaskAddress());
+			ripEntry.setMetric(tableEntry.getMetric());
+
+			rip.addEntry(ripEntry);
+		}
+		
+		udpPacket.setPayload(rip);
+		ip.setPayload(udpPacket);
+		etherPacket.setPayload(ip);
+		this.sendPacket(etherPacket, inIface);
+	}
 }
