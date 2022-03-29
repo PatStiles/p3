@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Collections;
@@ -41,7 +42,7 @@ public class RouteTable implements Runnable
 	private Router router;
 
 	/** Map of RIPv2Entry to time updated */
-	private HashMap<RIPv2Entry, Integer> ripTable = new HashMap<RIPv2Entry, Integer>();
+	private HashMap<RIPv2Entry, Long> ripTable = new HashMap<RIPv2Entry, Long>();
 
 	/**
 	 * Initialize an empty route table.
@@ -51,6 +52,21 @@ public class RouteTable implements Runnable
 		this.router = router;
 		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
 		this.timeoutThread = new Thread(this);
+	}
+
+	public Set<RIPv2Entry> getRipEntries()
+	{
+		return this.ripTable.keySet();
+	}
+
+	public void addRipEntry(RIPv2Entry entry)
+	{
+		this.ripTable.put(entry, System.currentTimeMillis());
+	}
+
+	public void removeRipEntry(RIPv2Entry entry)
+	{
+		this.ripTable.remove(entry);
 	}
 
 	public void run()

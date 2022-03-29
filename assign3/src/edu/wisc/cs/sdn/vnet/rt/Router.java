@@ -348,6 +348,8 @@ public class Router extends Device
 
 		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
+			boolean changesMade = false;
+
 			for (RIPv2Entry entry : rip.getEntries())
 			{
 				// check in routetable if matching entry
@@ -366,62 +368,52 @@ public class Router extends Device
 							// insert new entry to route table with time 0
 				// if changes made, send route and rip entries to requesting interface
 
-
-				int dstAddr = entry.getAddress();
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 
-				// See 3.4.2 implementation in textbook
 				if (match != null && match.getGatewayAddress() != EMPTY_GATEWAY_ADDRESS)
 				{
-					int curCost = match.getRipEntry().getMetric();
-					int newCost = entry.getMetric();
+					RIPv2Entry oldEntry = match.getRipEntry();
 
-					if (newCost + 1 < curCost)
+					if (match.isRipEntry())
 					{
-						// TODO: found a better route
-						match.setMetric(newCost + 1);
-						match.setTimeUpdated();
-						
-						//Flood RIP resp.
-						this.floodRIPResp();
-
-						break;
-					}
-					else if (match.isRipEntry() && entry.getNextHopAddress() == match.getRipEntry().getNextHopAddress())
-					{
-						// TODO: metric for current next hop may have changed
-						if (newCost != curCost)
+						if (oldEntry.getNextHopAddress() == entry.getNextHopAddress())
 						{
-							//this.routeTable.remove(match.getDestinationAddress(), maskIp)
-							match.setMetric(newCost);
-							// set rip entry
-							match.setTimeUpdated();
-
-							
+							if (oldEntry.getMetric() != entry.getMetric())
+							{
+								oldEntry.setMetric(entry.getMetric());
+								this.routeTable.addRipEntry(entry);
+								
+								changesMade = true;
+							}
 						}
+						else if (oldEntry.getMetric() < entry.getMetric())
+						{
+								// Found a shorter path
+								this.routeTable.removeRipEntry(entry);
 
-						// Flood RIP resp.
-						//this.floodRIPResp();
-						break;
-					}
-					else 
-					{
-						// Ignore this route
-						return;
+								// Update route table with new entry
+								match.setMetric(entry.getMetric());
+
+								// Update old RIP entry
+								oldEntry.setMetric(entry.getMetric());
+								oldEntry.setNextHopAddress(entry.getNextHopAddress());
+
+								this.routeTable.addRipEntry(entry);;
+
+								changesMade = true;
+						}
 					}
 				}
 				else
 				{
-					// Add new route to the table
-					this.routeTable.insert(dstAddr, dstAddr & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
-
-					//Flood RIP resp.
-					this.floodRIPResp();
+					this.routeTable.addRipEntry(entry);
 				}
-			}
 
-			System.out.println("Route table updated: --------");
-			System.out.println(this.routeTable.toString());
+				if (changesMade)
+				{
+					this.sendRipResponse(inIface);
+				}
+			}		
 		}
 		else
 		{
@@ -509,13 +501,18 @@ public class Router extends Device
 			{
 				RIPv2Entry ripEntry = new RIPv2Entry();
 
-				// TODO: set next hop address ?
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 				ripEntry.setMetric(tableEntry.getMetric());
 				ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 				rip.addEntry(ripEntry);
+			}
+
+			// TA said to send route entries and rip entries (?)
+			for (RIPv2Entry entry : this.routeTable.getRipEntries())
+			{
+				rip.addEntry(entry);
 			}
 			
 			udpPacket.setPayload(rip);
@@ -552,8 +549,15 @@ public class Router extends Device
 			ripEntry.setAddress(tableEntry.getDestinationAddress());
 			ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 			ripEntry.setMetric(tableEntry.getMetric());
+			ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 			rip.addEntry(ripEntry);
+		}
+
+		// TA said to send route entries and rip entries (?)
+		for (RIPv2Entry entry : this.routeTable.getRipEntries())
+		{
+			rip.addEntry(entry);
 		}
 		
 		udpPacket.setPayload(rip);
