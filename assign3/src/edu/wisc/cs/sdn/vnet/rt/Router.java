@@ -504,7 +504,7 @@ public class Router extends Device
 
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
-				ripEntry.setMetric(tableEntry.getMetric());
+				ripEntry.setMetric(tableEntry.getMetric() + 1);
 
 				rip.addEntry(ripEntry);
 			}
@@ -543,7 +543,7 @@ public class Router extends Device
 
 			ripEntry.setAddress(tableEntry.getDestinationAddress());
 			ripEntry.setSubnetMask(tableEntry.getMaskAddress());
-			ripEntry.setMetric(tableEntry.getMetric());
+			ripEntry.setMetric(tableEntry.getMetric() + 1);
 
 			rip.addEntry(ripEntry);
 		}
