@@ -356,7 +356,7 @@ public class Router extends Device
 
 				if (match != null && match.isRipEntry())
 				{
-					RIPv2Entry oldEntry = this.routeTable.ripTable.get(entry.getAddress()).ripEntry;
+					RIPv2Entry oldEntry = this.routeTable.getRipEntry(entry).ripEntry;
 
 					if (match.getGatewayAddress() == ip.getSourceAddress())
 					{
@@ -403,7 +403,7 @@ public class Router extends Device
 				else
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), rip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)

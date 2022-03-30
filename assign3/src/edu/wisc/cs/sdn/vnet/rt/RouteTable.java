@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Collections;
@@ -47,16 +49,21 @@ public class RouteTable implements Runnable
 
 	public void addRipEntry(RIPv2Entry entry)
 	{
-		this.ripTable.put(Integer.valueOf(entry.getAddress()), new tableEntry(entry));
+		this.ripTable.put(Collections.unmodifiableList(new ArrayList<Integer>(Arrays.asList(Integer.valueOf(entry.getAddress()), Integer.valueOf(entry.getSubnetMask())))), new tableEntry(entry));
+	}
+
+	public tableEntry getRipEntry(RIPv2Entry entry)
+	{
+	 	return this.ripTable.get(Collections.unmodifiableList(new ArrayList<Integer>(Arrays.asList(Integer.valueOf(entry.getAddress()), Integer.valueOf(entry.getSubnetMask())))));
 	}
 
 	public void removeRipEntry(RIPv2Entry entry)
 	{
-		this.ripTable.remove(Integer.valueOf(entry.getAddress()));
+		this.ripTable.remove(Collections.unmodifiableList(Arrays.asList(Integer.valueOf(entry.getAddress()), Integer.valueOf(entry.getSubnetMask()))));
 	}
 
 	//Hashmap to track addresses
-	public ConcurrentHashMap<Integer,tableEntry> ripTable;
+	public ConcurrentHashMap<List<Integer>,tableEntry> ripTable;
 
 	/** Thread for timing out requests and entries in cache */
 	private Thread timeoutThread;
@@ -74,7 +81,7 @@ public class RouteTable implements Runnable
 	{ 
 		this.router = router;
 		this.entries = Collections.synchronizedList(new LinkedList<RouteEntry>()); 
-		this.ripTable = new ConcurrentHashMap<Integer, tableEntry>();
+		this.ripTable = new ConcurrentHashMap<List<Integer>, tableEntry>();
 		this.timeoutThread = new Thread(this);
 	}
 
@@ -92,7 +99,7 @@ public class RouteTable implements Runnable
 			{
 				if ((System.currentTimeMillis() - entry.timeOut) > this.TIMEOUT)
 				{ 
-					this.ripTable.remove(Integer.valueOf(entry.ripEntry.getAddress()));
+					this.removeRipEntry(entry.ripEntry);
 			       		
 					synchronized(this.entries)
 				       	{
