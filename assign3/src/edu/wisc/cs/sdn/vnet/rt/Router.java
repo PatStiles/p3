@@ -356,7 +356,8 @@ public class Router extends Device
 
 				if (match != null && match.isRipEntry())
 				{
-					RIPv2Entry oldEntry = this.routeTable.getRipEntry(entry).ripEntry;
+					RIPv2Entry oldEntry = this.routeTable.getRipEntry(entry).ripEntry; 
+					int newCost = entry.getMetric() + 1;
 
 					if (match.getGatewayAddress() == ip.getSourceAddress())
 					{
@@ -367,17 +368,17 @@ public class Router extends Device
 						}
 						else
 						{
-							if (oldEntry.getMetric() != entry.getMetric())
+							if (oldEntry.getMetric() != newCost)
 							{
 								changesMade = true;
 							}
 
-							oldEntry.setMetric(entry.getMetric());
-							match.setMetric(entry.getMetric());
+							oldEntry.setMetric(newCost);
+							match.setMetric(newCost);
 							this.routeTable.addRipEntry(entry);
 						}
 					}
-					else if (oldEntry.getMetric() < entry.getMetric())
+					else if (oldEntry.getMetric() < newCost)
 					{
 						if (entry.getMetric() > 15)
 						{
@@ -390,12 +391,12 @@ public class Router extends Device
 							this.routeTable.removeRipEntry(entry);
 
 							// Update route table with new entry
-							match.setMetric(entry.getMetric());
+							match.setMetric(newCost);
 
 							// Update old RIP entry
-							oldEntry.setMetric(entry.getMetric());
+							oldEntry.setMetric(newCost);
 
-							entry.setMetric(entry.getMetric());
+							entry.setMetric(newCost);
 
 							this.routeTable.addRipEntry(entry);
 							changesMade = true;
@@ -504,7 +505,7 @@ public class Router extends Device
 
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
-				ripEntry.setMetric(tableEntry.getMetric() + 1);
+				ripEntry.setMetric(tableEntry.getMetric());
 
 				rip.addEntry(ripEntry);
 			}
@@ -543,7 +544,7 @@ public class Router extends Device
 
 			ripEntry.setAddress(tableEntry.getDestinationAddress());
 			ripEntry.setSubnetMask(tableEntry.getMaskAddress());
-			ripEntry.setMetric(tableEntry.getMetric() + 1);
+			ripEntry.setMetric(tableEntry.getMetric());
 
 			rip.addEntry(ripEntry);
 		}
