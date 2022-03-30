@@ -351,7 +351,7 @@ public class Router extends Device
 			if (this.routeTable.getRipEntry(inIface.getIpAddress() & inIface.getSubnetMask(), inIface.getSubnetMask()) == null)
 			{
 				RIPv2Entry entry = new RIPv2Entry();
-				entry.setAddress(inIface.getIpAddress());
+				entry.setAddress(inIface.getIpAddress() & inIface.getSubnetMask());
 				entry.setSubnetMask(inIface.getSubnetMask());
 				entry.setMetric(16);
 				this.routeTable.addRipEntry(entry);
