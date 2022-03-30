@@ -352,44 +352,29 @@ public class Router extends Device
 
 			for (RIPv2Entry entry : rip.getEntries())
 			{
-				// check in routetable if matching entry
-				// if no match, add entry to route table and rip table
-				// keep variable for if changes were made
-				// check if rip entry or not
-					// if not, ignore
-					// if it is, check if coming from same router (old next hop == current next hop)
-						// compare metrics, if not same, update, put updated entry in rip table
-					// if not, check if current metric < old metric
-						// path shortened
-						// remove old entry from rip table
-						// update route table with new entry
-						// update rip table
-							// set old entry's metric and next hop address to new
-							// insert new entry to route table with time 0
-				// if changes made, send route and rip entries to requesting interface
-
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 
 				if (match != null && match.isRipEntry())
 				{
 					RIPv2Entry oldEntry = this.routeTable.ripTable.get(entry.getAddress()).ripEntry;
 
-					if (oldEntry.getNextHopAddress() == entry.getNextHopAddress())
+					if (match.getGatewayAddress() == ip.getSourceAddress())
 					{
-						if (oldEntry.getMetric() != entry.getMetric())
+						if (entry.getMetric() > 15)
 						{
-							if (entry.getMetric() > 15)
+							this.routeTable.removeRipEntry(oldEntry);
+							this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
+						}
+						else
+						{
+							if (oldEntry.getMetric() != entry.getMetric())
 							{
-								this.routeTable.removeRipEntry(oldEntry);
-								this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
-							}
-							else
-							{
-								oldEntry.setMetric(entry.getMetric());
-								this.routeTable.addRipEntry(entry);
-								
 								changesMade = true;
 							}
+
+							oldEntry.setMetric(entry.getMetric());
+							match.setMetric(entry.getMetric());
+							this.routeTable.addRipEntry(entry);
 						}
 					}
 					else if (oldEntry.getMetric() < entry.getMetric())
@@ -409,10 +394,8 @@ public class Router extends Device
 
 							// Update old RIP entry
 							oldEntry.setMetric(entry.getMetric());
-							oldEntry.setNextHopAddress(entry.getNextHopAddress());
 
 							this.routeTable.addRipEntry(entry);
-
 							changesMade = true;
 						}
 					}
@@ -420,7 +403,7 @@ public class Router extends Device
 				else
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), entry.getAddress() & entry.getSubnetMask(), entry.getSubnetMask(), inIface, entry.getMetric());
+					this.routeTable.insert(entry.getAddress(), rip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
@@ -429,7 +412,7 @@ public class Router extends Device
 					System.out.println(this.routeTable.toString());
 					System.out.println("-----------------------------");
 
-					this.sendRipResponse(inIface);
+					this.floodRIPResp();
 				}
 			}		
 		}
@@ -438,8 +421,6 @@ public class Router extends Device
 			// Send response for the given request
 			this.sendRipResponse(inIface);
 		}
-
-		return;
 	}
 
 	public void buildRipRouteTable()
@@ -522,15 +503,8 @@ public class Router extends Device
 				ripEntry.setAddress(tableEntry.getDestinationAddress());
 				ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 				ripEntry.setMetric(tableEntry.getMetric());
-				ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 				rip.addEntry(ripEntry);
-			}
-
-			// TA said to send route entries and rip entries (?)
-			for (tableEntry entry : this.routeTable.ripTable.values())
-			{
-				rip.addEntry(entry.ripEntry);
 			}
 			
 			udpPacket.setPayload(rip);
@@ -570,12 +544,6 @@ public class Router extends Device
 			ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 			rip.addEntry(ripEntry);
-		}
-
-		// TA said to send route entries and rip entries (?)
-		for (tableEntry entry : this.routeTable.ripTable.values())
-		{
-			rip.addEntry(entry.ripEntry);
 		}
 		
 		udpPacket.setPayload(rip);
