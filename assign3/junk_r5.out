@@ -1,0 +1,344 @@
+Connecting to server localhost:8888
+Device interfaces:
+eth2	HWaddr D2:23:93:E2:AD:DC
+	inet addr:10.0.8.5 Mask:255.255.255.0
+eth1	HWaddr 72:AA:AA:14:76:19
+	inet addr:10.0.9.5 Mask:255.255.255.0
+Loaded route table from directly reachable subnets
+-------------------------------------------------
+Destination	Gateway		Mask		Iface		Cost
+10.0.8.0 	0.0.0.0 	255.255.255.0 	eth2 	1
+10.0.9.0 	0.0.0.0 	255.255.255.0 	eth1 	1
+-------------------------------------------------
+Loaded static ARP cache
+----------------------------------
+IP		MAC
+10.0.1.1 	0E:99:BC:AD:BA:5A
+10.0.2.1 	86:17:D1:68:A5:4A
+10.0.3.2 	9E:F0:29:90:87:EF
+10.0.2.2 	12:CF:36:0B:EB:01
+10.0.4.2 	EA:95:2F:2C:72:42
+10.0.5.3 	66:CF:76:8E:87:44
+10.0.4.3 	46:B2:C3:75:80:FB
+10.0.6.3 	2E:FA:28:8E:FE:C1
+10.0.7.4 	FE:DE:D9:DB:42:9B
+10.0.6.4 	2A:47:FC:AA:14:81
+10.0.8.4 	B6:34:D8:50:AD:8F
+10.0.1.101 	00:00:00:00:00:01
+10.0.9.5 	72:AA:AA:14:76:19
+10.0.8.5 	D2:23:93:E2:AD:DC
+10.0.3.102 	00:00:00:00:00:02
+10.0.5.103 	00:00:00:00:00:03
+10.0.7.104 	00:00:00:00:00:04
+10.0.9.105 	00:00:00:00:00:05
+----------------------------------
+<-- Ready to process packets -->
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Send RIP response
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: b6:34:d8:50:ad:8f
+	nw_src: 10.0.8.4
+	nw_dst: 10.0.8.4
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+-----Updated route table-----
+Destination	Gateway		Mask		Iface		Cost
+10.0.8.0 	0.0.0.0 	255.255.255.0 	eth2 	1
+10.0.9.0 	0.0.0.0 	255.255.255.0 	eth1 	1
+10.0.6.0 	10.0.8.4 	255.255.255.0 	eth2 	1
+10.0.7.0 	10.0.8.4 	255.255.255.0 	eth2 	1
+10.0.1.0 	10.0.8.4 	255.255.255.0 	eth2 	1
+10.0.2.0 	10.0.8.4 	255.255.255.0 	eth2 	16
+10.0.3.0 	10.0.8.4 	255.255.255.0 	eth2 	16
+10.0.4.0 	10.0.8.4 	255.255.255.0 	eth2 	16
+10.0.5.0 	10.0.8.4 	255.255.255.0 	eth2 	16
+
+-----------------------------
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+Flood RIP Responses
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.8.4
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Handle RIP packet
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: b6:34:d8:50:ad:8f
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Flood RIP Responses
+Flood RIP Responses
+Flood RIP Responses
+Flood RIP Responses
+Flood RIP Responses
+Flood RIP Responses
