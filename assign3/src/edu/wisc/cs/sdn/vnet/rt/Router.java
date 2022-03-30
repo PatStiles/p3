@@ -445,6 +445,8 @@ public class Router extends Device
 		for (Iface iface : this.interfaces.values())
 		{
 			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
+			System.out.println(iface.getIpAddress());
+			System.out.println(destinationAddress);
 			int maskAddress = iface.getSubnetMask();
 
 			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface, 1);
