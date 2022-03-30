@@ -400,7 +400,7 @@ public class Router extends Device
 						}
 					}
 				}
-				else
+				else if (match == null)
 				{
 					this.routeTable.addRipEntry(entry);
 					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
