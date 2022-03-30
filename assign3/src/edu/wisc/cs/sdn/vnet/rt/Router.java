@@ -365,6 +365,8 @@ public class Router extends Device
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 				int newCost = Math.min(entry.getMetric() + network.ripEntry.getMetric(), 16);
 				entry.setMetric(newCost);
+				System.out.println("entry " + entry.getMetric());
+				System.out.println("network " + network.ripEntry.getMetric());
 				System.out.println("cost " + newCost);
 
 				if (match != null && match.isRipEntry())
