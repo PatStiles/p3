@@ -403,7 +403,7 @@ public class Router extends Device
 				else
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), rip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
@@ -526,6 +526,7 @@ public class Router extends Device
 		IPv4 ip = new IPv4();
 		ip.setTtl((byte)64);
 		ip.setProtocol(IPv4.PROTOCOL_UDP);
+		ip.setSourceAddress(inIface.getIpAddress());
 		ip.setDestinationAddress(inIface.getIpAddress());
 
 		UDP udpPacket = new UDP();
