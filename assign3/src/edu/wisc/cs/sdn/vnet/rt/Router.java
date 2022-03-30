@@ -348,26 +348,11 @@ public class Router extends Device
 
 		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
-			if (this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask()) == null)
-			{
-				RIPv2Entry entry = new RIPv2Entry();
-				entry.setAddress(inIface.getIpAddress());
-				entry.setSubnetMask(inIface.getSubnetMask());
-				entry.setMetric(16);
-				this.routeTable.addRipEntry(entry);
-			}
-
-			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
 			boolean changesMade = false;
 
 			for (RIPv2Entry entry : rip.getEntries())
 			{
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
-				int newCost = Math.min(entry.getMetric() + network.ripEntry.getMetric(), 16);
-				
-				System.out.println("entry " + entry.getMetric());
-				System.out.println("network " + network.ripEntry.getMetric());
-				System.out.println("cost " + newCost);
 
 				if (match != null && match.isRipEntry())
 				{
@@ -382,18 +367,17 @@ public class Router extends Device
 						}
 						else
 						{
-							if (oldEntry.getMetric() != newCost)
+							if (oldEntry.getMetric() != entry.getMetric())
 							{
 								changesMade = true;
 							}
 
-							oldEntry.setMetric(newCost);
-							match.setMetric(newCost);
-							entry.setMetric(newCost);
+							oldEntry.setMetric(entry.getMetric());
+							match.setMetric(entry.getMetric());
 							this.routeTable.addRipEntry(entry);
 						}
 					}
-					else if (oldEntry.getMetric() < newCost)
+					else if (oldEntry.getMetric() < entry.getMetric())
 					{
 						if (entry.getMetric() > 15)
 						{
@@ -406,12 +390,12 @@ public class Router extends Device
 							this.routeTable.removeRipEntry(entry);
 
 							// Update route table with new entry
-							match.setMetric(newCost);
+							match.setMetric(entry.getMetric());
 
 							// Update old RIP entry
-							oldEntry.setMetric(newCost);
+							oldEntry.setMetric(entry.getMetric());
 
-							entry.setMetric(newCost);
+							entry.setMetric(entry.getMetric());
 
 							this.routeTable.addRipEntry(entry);
 							changesMade = true;
@@ -421,7 +405,7 @@ public class Router extends Device
 				else if (match == null)
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, newCost);
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
@@ -450,7 +434,7 @@ public class Router extends Device
 			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
 			int maskAddress = iface.getSubnetMask();
 
-			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface, 1);
+			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface, 0);
 		}
 
 		System.out.println("Loaded route table from directly reachable subnets");
@@ -560,7 +544,6 @@ public class Router extends Device
 			ripEntry.setAddress(tableEntry.getDestinationAddress());
 			ripEntry.setSubnetMask(tableEntry.getMaskAddress());
 			ripEntry.setMetric(tableEntry.getMetric());
-			ripEntry.setNextHopAddress(tableEntry.getDestinationAddress());
 
 			rip.addEntry(ripEntry);
 		}
