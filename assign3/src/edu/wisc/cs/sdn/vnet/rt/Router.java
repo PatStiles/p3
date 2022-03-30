@@ -402,8 +402,18 @@ public class Router extends Device
 				}
 				else if (match == null)
 				{
+					int metric = 16;
+
+					// Get table entry for network the packet was sent from
+					tableEntry r = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
+					if (r != null)
+					{
+						// Add cost of reaching that network to cost of the entry
+						metric = Math.min(entry.getMetric() + r.ripEntry.getMetric(), metric);
+					}
+
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, metric);
 				}
 
 				if (changesMade)
