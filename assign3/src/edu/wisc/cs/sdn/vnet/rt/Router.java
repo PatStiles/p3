@@ -348,16 +348,16 @@ public class Router extends Device
 
 		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
-			if (this.routeTable.getRipEntry(inIface.getIpAddress() & inIface.getSubnetMask(), inIface.getSubnetMask()) == null)
+			if (this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask()) == null)
 			{
 				RIPv2Entry entry = new RIPv2Entry();
-				entry.setAddress(inIface.getIpAddress() & inIface.getSubnetMask());
+				entry.setAddress(inIface.getIpAddress());
 				entry.setSubnetMask(inIface.getSubnetMask());
 				entry.setMetric(16);
 				this.routeTable.addRipEntry(entry);
 			}
 
-			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress() & inIface.getSubnetMask(), inIface.getSubnetMask());
+			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
 			boolean changesMade = false;
 
 			for (RIPv2Entry entry : rip.getEntries())
@@ -448,8 +448,6 @@ public class Router extends Device
 		for (Iface iface : this.interfaces.values())
 		{
 			int destinationAddress = iface.getIpAddress() & iface.getSubnetMask();
-			System.out.println(iface.getIpAddress());
-			System.out.println(destinationAddress);
 			int maskAddress = iface.getSubnetMask();
 
 			this.routeTable.insert(destinationAddress, EMPTY_GATEWAY_ADDRESS, maskAddress, iface, 1);
