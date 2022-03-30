@@ -526,6 +526,7 @@ public class Router extends Device
 		IPv4 ip = new IPv4();
 		ip.setTtl((byte)64);
 		ip.setProtocol(IPv4.PROTOCOL_UDP);
+		ip.setSourceAddress(inIface.getIpAddress());
 		ip.setDestinationAddress(inIface.getIpAddress());
 
 		UDP udpPacket = new UDP();
