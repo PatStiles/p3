@@ -364,7 +364,7 @@ public class Router extends Device
 			{
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
 				int newCost = Math.min(entry.getMetric() + network.ripEntry.getMetric(), 16);
-				entry.setMetric(newCost);
+				
 				System.out.println("entry " + entry.getMetric());
 				System.out.println("network " + network.ripEntry.getMetric());
 				System.out.println("cost " + newCost);
@@ -389,6 +389,7 @@ public class Router extends Device
 
 							oldEntry.setMetric(newCost);
 							match.setMetric(newCost);
+							entry.setMetric(newCost);
 							this.routeTable.addRipEntry(entry);
 						}
 					}
@@ -409,6 +410,8 @@ public class Router extends Device
 
 							// Update old RIP entry
 							oldEntry.setMetric(newCost);
+
+							entry.setMetric(newCost);
 
 							this.routeTable.addRipEntry(entry);
 							changesMade = true;
