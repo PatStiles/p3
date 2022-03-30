@@ -77,7 +77,7 @@ public class RouteEntry
 	{ return this.ripEntry; }
 
 	public boolean isRipEntry()
-	{ return this.ripEntry != null; }
+	{ return this.gatewayAddress != IPv4.toIPv4Address("0.0.0.0"); }
 	
 	/**
 	 * @return destination IP address
