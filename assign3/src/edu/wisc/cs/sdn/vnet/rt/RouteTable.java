@@ -57,6 +57,11 @@ public class RouteTable implements Runnable
 	 	return this.ripTable.get(Collections.unmodifiableList(new ArrayList<Integer>(Arrays.asList(Integer.valueOf(entry.getAddress()), Integer.valueOf(entry.getSubnetMask())))));
 	}
 
+	public tableEntry getRipEntry(int ip, int mask)
+	{
+	 	return this.ripTable.get(Collections.unmodifiableList(new ArrayList<Integer>(Arrays.asList(Integer.valueOf(ip), Integer.valueOf(mask)))));
+	}
+
 	public void removeRipEntry(RIPv2Entry entry)
 	{
 		this.ripTable.remove(Collections.unmodifiableList(Arrays.asList(Integer.valueOf(entry.getAddress()), Integer.valueOf(entry.getSubnetMask()))));
