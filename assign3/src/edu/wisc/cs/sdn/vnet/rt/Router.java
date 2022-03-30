@@ -348,7 +348,7 @@ public class Router extends Device
 
 		if (rip.getCommand() == RIPv2.COMMAND_RESPONSE)
 		{
-			if (this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask()) == null)
+			if (this.routeTable.getRipEntry(inIface.getIpAddress() & inIface.getSubnetMask(), inIface.getSubnetMask()) == null)
 			{
 				RIPv2Entry entry = new RIPv2Entry();
 				entry.setAddress(inIface.getIpAddress());
@@ -357,7 +357,7 @@ public class Router extends Device
 				this.routeTable.addRipEntry(entry);
 			}
 
-			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
+			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress() & inIface.getSubnetMask(), inIface.getSubnetMask());
 			boolean changesMade = false;
 
 			for (RIPv2Entry entry : rip.getEntries())
