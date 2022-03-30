@@ -405,7 +405,7 @@ public class Router extends Device
 				else if (match == null)
 				{
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric() + 1);
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, entry.getMetric());
 				}
 
 				if (changesMade)
