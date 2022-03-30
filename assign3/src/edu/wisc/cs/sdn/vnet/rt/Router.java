@@ -358,17 +358,18 @@ public class Router extends Device
 			}
 
 			tableEntry network = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
-
 			boolean changesMade = false;
 
 			for (RIPv2Entry entry : rip.getEntries())
 			{
 				RouteEntry match = this.routeTable.find(entry.getAddress(), entry.getSubnetMask());
+				int newCost = Math.min(entry.getMetric() + network.ripEntry.getMetric(), 16);
+				entry.setMetric(newCost);
+				System.out.println("cost " + newCost);
 
 				if (match != null && match.isRipEntry())
 				{
 					RIPv2Entry oldEntry = this.routeTable.getRipEntry(entry).ripEntry;
-					int newCost = Math.min(entry.getMetric() + network.ripEntry.getMetric(), 16);
 
 					if (match.getGatewayAddress() == ip.getSourceAddress())
 					{
@@ -414,18 +415,8 @@ public class Router extends Device
 				}
 				else if (match == null)
 				{
-					int metric = 16;
-
-					// Get table entry for network the packet was sent from
-					tableEntry r = this.routeTable.getRipEntry(inIface.getIpAddress(), inIface.getSubnetMask());
-					if (r != null)
-					{
-						// Add cost of reaching that network to cost of the entry
-						metric = Math.min(entry.getMetric() + r.ripEntry.getMetric(), metric);
-					}
-
 					this.routeTable.addRipEntry(entry);
-					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, metric);
+					this.routeTable.insert(entry.getAddress(), ip.getSourceAddress(), entry.getSubnetMask(), inIface, newCost);
 				}
 
 				if (changesMade)
