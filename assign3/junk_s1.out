@@ -1,0 +1,629 @@
+Connecting to server localhost:8888
+Device interfaces:
+eth2
+eth1
+<-- Ready to process packets -->
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -10218
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -10218
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -10218
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -10218
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -10218
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -10218
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -10218
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -10218
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -10218
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -10218
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.3.103
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -20222
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.3.103
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -20222
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.3.103
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -20222
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.3.103
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -20222
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.3.103
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -20222
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.3.103
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -20222
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.3.103
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -20222
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.3.103
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -20222
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.3.103
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -20222
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.3.103
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -20222
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	-31011
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 33:33:00:00:00:02
+	data packet
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -18818
+	tp_dst: 80
+Send packet out interface eth1
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -18818
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -18818
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -18818
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -18818
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -18818
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -18818
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -18818
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: 00:00:00:00:00:01
+	nw_src: 10.0.2.102
+	nw_dst: 10.0.1.101
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: -18818
+	tp_dst: 80
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 00:00:00:00:00:01
+	dl_dst: 82:c1:cf:15:36:43
+	nw_src: 10.0.1.101
+	nw_dst: 10.0.2.102
+	nw_tos: 0
+	nw_proto: 6
+	tp_src: 80
+	tp_dst: -18818
+*** -> Received packet: 
+	ip
+	dl_vlan: untagged
+	dl_vlan_pcp: 0
+	dl_src: 82:c1:cf:15:36:43
+	dl_dst: ff:ff:ff:ff:ff:ff
+	nw_src: 10.0.1.1
+	nw_dst: 224.0.0.9
+	nw_tos: 0
+	nw_proto: 17
+	tp_src: 0
+	tp_dst: 520
+Send packet out interface eth1
