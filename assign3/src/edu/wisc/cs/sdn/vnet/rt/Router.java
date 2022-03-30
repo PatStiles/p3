@@ -363,8 +363,7 @@ public class Router extends Device
 					{
 						if (newCost > 15)
 						{
-							this.routeTable.removeRipEntry(oldEntry);
-							this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
+							break;
 						}
 						else
 						{
@@ -378,12 +377,11 @@ public class Router extends Device
 							this.routeTable.addRipEntry(entry);
 						}
 					}
-					else if (oldEntry.getMetric() < newCost)
+					else if (oldEntry.getMetric() > newCost)
 					{
 						if (newCost > 15)
 						{
-							this.routeTable.removeRipEntry(oldEntry);
-							this.routeTable.remove(oldEntry.getAddress(), oldEntry.getSubnetMask());
+							break;
 						}
 						else
 						{
@@ -474,7 +472,9 @@ public class Router extends Device
 
 	public void floodRIPResp()
 	{
-		System.out.println("Flood RIP Responses");
+		System.out.println("-----Flood RIP Responses-----");
+		System.out.println(this.routeTable.toString());
+		System.out.println("-----------------------------");
 
 		for (Iface iface : this.interfaces.values())
 		{
